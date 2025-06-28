@@ -83,7 +83,7 @@ python -m src.main
 ├── src/                     # Source code
 ├── tests/                   # Test files
 ├── docs/                    # Documentation
-├── requirements.txt         # Python dependencies
+├── pyproject.toml           # Python dependencies and project configuration
 ├── setup.sh                 # Setup script
 ├── .pre-commit-config.yaml  # Pre-commit configuration
 ├── .gitignore              # Git ignore rules

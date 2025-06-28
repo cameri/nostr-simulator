@@ -1,0 +1,50 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Update dependencies
+      run: |
+        poetry update
+        poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+    - name: Run tests to ensure updates don't break anything
+      run: |
+        poetry install
+        poetry run pytest --cov=src --cov-fail-under=100
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies'
+        title: 'chore: update dependencies'
+        body: |
+          Automated dependency updates
+
+          This PR updates all dependencies to their latest compatible versions.
+          All tests are passing with the updated dependencies.
+        branch: dependencies/update-deps
+        delete-branch: true

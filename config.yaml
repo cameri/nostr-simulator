@@ -1,0 +1,35 @@
+# Default configuration for Nostr Simulator
+
+simulation:
+  duration: 3600.0  # 1 hour
+  time_step: 1.0
+  random_seed: 42
+  max_events: null
+
+network:
+  num_relays: 10
+  num_honest_users: 100
+  num_malicious_users: 10
+  connection_probability: 0.3
+
+antispam:
+  enabled_strategies:
+    - "rate_limiting"
+  pow_difficulty: 4
+  rate_limit_per_second: 1.0
+  wot_trust_threshold: 0.5
+
+attacks:
+  sybil_attack_enabled: false
+  burst_spam_enabled: false
+  replay_attack_enabled: false
+  offline_abuse_enabled: false
+  sybil_identities_per_attacker: 10
+  burst_spam_rate: 10.0
+  burst_duration: 60.0
+
+metrics:
+  enabled: true
+  collection_interval: 10.0
+  output_format: "json"
+  output_file: "simulation_results.json"

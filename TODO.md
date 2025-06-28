@@ -6,29 +6,29 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Project Setup
 
-- [ ] Initialize poetry project with pyproject.toml
-- [ ] Set up basic project structure (src/, tests/, docs/)
-- [ ] Configure development tools (mypy, ruff, black, isort, pytest)
-- [ ] Create initial CI/CD configuration
-- [ ] Set up logging configuration
-- [ ] Create base configuration management system
+- [x] Initialize poetry project with pyproject.toml
+- [x] Set up basic project structure (src/, tests/, docs/)
+- [x] Configure development tools (mypy, ruff, black, isort, pytest)
+- [x] Create initial CI/CD configuration
+- [x] Set up logging configuration
+- [x] Create base configuration management system
 
 ### Core Simulation Engine
 
-- [ ] Implement discrete event simulation framework
-- [ ] Create event queue and scheduler
-- [ ] Design time management system
-- [ ] Implement basic metrics collection system
-- [ ] Create simulation state management
-- [ ] Add simulation configuration loader
+- [x] Implement discrete event simulation framework
+- [x] Create event queue and scheduler
+- [x] Design time management system
+- [x] Implement basic metrics collection system
+- [x] Create simulation state management
+- [x] Add simulation configuration loader
 
 ### Base Agent Framework
 
-- [ ] Design abstract base agent class
-- [ ] Implement agent lifecycle management
-- [ ] Create agent communication system
-- [ ] Add agent state tracking
-- [ ] Implement basic agent behaviors
+- [x] Design abstract base agent class
+- [x] Implement agent lifecycle management
+- [x] Create agent communication system
+- [x] Add agent state tracking
+- [x] Implement basic agent behaviors
 
 ## Phase 2: Network Infrastructure and Actors
 
