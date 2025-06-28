@@ -1,0 +1,30 @@
+# Python Instructions
+
+- Use Python 3.11 or later
+- Follow PEP 8 style guidelines strictly
+- Use type hints for all function signatures, class attributes, and variables
+- Use `from __future__ import annotations` for forward references when needed
+- Prefer dataclasses or Pydantic models for structured data
+- Use enums from the `enum` module for constants and choices
+- Use pathlib for file system operations instead of os.path
+- Handle exceptions explicitly with try/except blocks
+- Use custom exception classes for domain-specific errors
+- Use descriptive variable and function names following snake_case convention
+- Use UPPER_CASE for constants
+- Group imports by standard library, third-party packages, and local modules
+- Use absolute imports from the project root
+- Prefer composition over inheritance
+- Use context managers (with statements) for resource management
+- Use list/dict comprehensions when they improve readability
+- Use f-strings for string formatting
+- Add docstrings to all classes and functions using Google style
+- Use logging module instead of print statements for debugging
+- Implement proper error handling and validation
+- Use async/await for I/O operations when beneficial
+- Prefer immutable data structures when possible
+- Use generators for memory-efficient iteration over large datasets
+- Write unit tests with pytest and aim for 100% code coverage
+- Use mypy for static type checking
+- Use black for code formatting
+- Use isort for import sorting
+- Use ruff for fast linting
