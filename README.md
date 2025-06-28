@@ -20,13 +20,13 @@ A Python-based simulator for decentralized anti-spam and anti-abuse strategies o
    ./setup.sh
    ```
 
-2. **Activate the virtual environment:**
+1. **Activate the virtual environment:**
 
    ```bash
    source .venv/bin/activate
    ```
 
-3. **Verify installation:**
+1. **Verify installation:**
 
    ```bash
    python -m pytest --version
@@ -122,12 +122,12 @@ The project includes dependencies for:
 ## Contributing
 
 1. Activate the virtual environment: `source .venv/bin/activate`
-2. Make your changes
-3. Run quality checks: `pre-commit run --all-files`
-4. Run tests: `pytest --cov=src --cov-report=term`
-5. Update documentation as needed
-6. Commit using jj or git
+1. Make your changes
+1. Run quality checks: `pre-commit run --all-files`
+1. Run tests: `pytest --cov=src --cov-report=term`
+1. Update documentation as needed
+1. Commit using jj or git
 
 ## License
 
-[Add your license information here]
+Ricardo Cabral's Nostr Simulator is licensed under the MIT License. See `LICENSE.md` for details.

@@ -1,35 +1,35 @@
-# Development and formatting tools
-pre-commit>=4.0.1
-mdformat>=0.7.18
-mdformat-mkdocs>=3.0.0
-mdformat-gfm>=0.3.6
-mdformat-frontmatter>=2.0.8
-mdformat-footnote>=0.1.1
+bandit>=1.8.0
 
 # Python code quality tools
 black>=24.10.0
 isort>=5.13.3
-mypy>=1.13.0
-ruff>=0.8.4
-bandit>=1.8.0
+matplotlib>=3.10.0
+mdformat>=0.7.18
+mdformat-footnote>=0.1.1
+mdformat-frontmatter>=2.0.8
+mdformat-gfm>=0.3.6
+mdformat-mkdocs>=3.0.0
 
-# Testing
-pytest>=8.3.4
-pytest-cov>=6.0.0
+# Agent-based modeling and simulation
+mesa>=3.0.0
 
 # Documentation
 mkdocs>=1.6.2
 mkdocs-material>=9.5.44
-
-# Agent-based modeling and simulation
-mesa>=3.0.0
+mypy>=1.13.0
+networkx>=3.4
 numpy>=2.2.0
 pandas>=2.3.0
-matplotlib>=3.10.0
-seaborn>=0.13.3
-networkx>=3.4
+# Development and formatting tools
+pre-commit>=4.2.0
 
 # Logging and configuration
 pydantic>=2.10.0
+
+# Testing
+pytest>=8.3.4
+pytest-cov>=6.0.0
 pyyaml>=6.0.2
 rich>=13.9.0
+ruff>=0.8.4
+seaborn>=0.13.3

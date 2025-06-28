@@ -8,7 +8,7 @@ repos:
 
   # Import sorting
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.3
+    rev: 5.13.2
     hooks:
       - id: isort
         args: ["--profile", "black"]
@@ -34,10 +34,8 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs
           - mdformat-gfm
           - mdformat-frontmatter
-          - mdformat-footnote
 
   # General hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks

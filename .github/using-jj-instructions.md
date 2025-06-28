@@ -1,6 +1,7 @@
 # Version Control Instructions
 
 Use `jj` for version control. Do not use `git` directly. `jj` is a distributed version control system that is similar to Git but has some differences in its workflow and commands.
+
 - Always create a new revision using `jj new -m "your message"` before making new edits.
 - Update the description of a revision using `jj describe -m "your message"` after you are done making all changes if needed.
 - To split your changes into parent and child revisions, use `jj split [-r revision] <file,...>`. Use -r to split a specific revision other than the current one. Use -p to split the revision into two parallel revisions instead of a parent and child.
@@ -29,4 +30,4 @@ To undo the last revision:
 jj undo
 
 To rebase a revision and it's descendants on top of another revision:
-jj rebase -s <source_revision> -d <destination_revision>
+jj rebase -s \<source_revision> -d \<destination_revision>

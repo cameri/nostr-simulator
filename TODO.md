@@ -5,6 +5,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 1: Foundation and Core Infrastructure
 
 ### Project Setup
+
 - [ ] Initialize poetry project with pyproject.toml
 - [ ] Set up basic project structure (src/, tests/, docs/)
 - [ ] Configure development tools (mypy, ruff, black, isort, pytest)
@@ -13,6 +14,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create base configuration management system
 
 ### Core Simulation Engine
+
 - [ ] Implement discrete event simulation framework
 - [ ] Create event queue and scheduler
 - [ ] Design time management system
@@ -21,6 +23,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Add simulation configuration loader
 
 ### Base Agent Framework
+
 - [ ] Design abstract base agent class
 - [ ] Implement agent lifecycle management
 - [ ] Create agent communication system
@@ -30,6 +33,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 2: Network Infrastructure and Actors
 
 ### Nostr Protocol Implementation
+
 - [ ] Implement basic Nostr event structure
 - [ ] Create event validation system
 - [ ] Add cryptographic key management
@@ -37,6 +41,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create event serialization/deserialization
 
 ### Relay Implementation
+
 - [ ] Create base relay agent class
 - [ ] Implement event storage and retrieval
 - [ ] Add basic event filtering
@@ -44,6 +49,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Implement relay policies framework
 
 ### Client Implementation
+
 - [ ] Create base client agent class
 - [ ] Implement event publishing
 - [ ] Add event subscription system
@@ -51,6 +57,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Add offline/online state management
 
 ### User Agents
+
 - [ ] Implement honest user agent
 - [ ] Create user behavior patterns
 - [ ] Add social graph management
@@ -60,6 +67,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 3: Anti-Spam Strategies
 
 ### Proof of Work (PoW)
+
 - [ ] Implement PoW calculation system
 - [ ] Create difficulty adjustment mechanism
 - [ ] Add PoW validation
@@ -67,6 +75,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Add performance metrics for PoW
 
 ### Web of Trust (WoT)
+
 - [ ] Implement trust graph data structure
 - [ ] Create trust score calculation
 - [ ] Add trust propagation algorithms
@@ -74,6 +83,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create trust decay mechanisms
 
 ### Rate Limiting
+
 - [ ] Implement token bucket rate limiting
 - [ ] Create sliding window rate limiting
 - [ ] Add adaptive rate limiting
@@ -81,6 +91,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create rate limit bypass for trusted users
 
 ### Hashchain / Rolling Codes
+
 - [ ] Implement hashchain generation
 - [ ] Create rolling code validation
 - [ ] Add time-based code rotation
@@ -88,6 +99,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create recovery mechanisms
 
 ### Local Reputation Tokens
+
 - [ ] Design reputation token system
 - [ ] Implement token earning mechanisms
 - [ ] Create token spending system
@@ -95,6 +107,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Implement token decay/renewal
 
 ### Event Age Proof
+
 - [ ] Implement timestamp verification
 - [ ] Create age-based filtering
 - [ ] Add chronological validation
@@ -102,6 +115,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create age verification system
 
 ### Group Signature Schemes
+
 - [ ] Implement group key management
 - [ ] Create group membership validation
 - [ ] Add group signature generation
@@ -111,6 +125,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 4: Attack Vectors and Adversarial Agents
 
 ### Sybil Attack Implementation
+
 - [ ] Create sybil attacker agent
 - [ ] Implement multiple identity management
 - [ ] Add coordinated sybil behaviors
@@ -118,6 +133,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Implement sybil detection evasion
 
 ### Burst Spam Attack
+
 - [ ] Implement burst spam agent
 - [ ] Create burst timing strategies
 - [ ] Add volume scaling mechanisms
@@ -125,6 +141,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create burst pattern variations
 
 ### Hash-Link Spam
+
 - [ ] Implement obfuscated link generation
 - [ ] Create link variation strategies
 - [ ] Add domain rotation mechanisms
@@ -132,6 +149,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create payload obfuscation
 
 ### Replay Attacks
+
 - [ ] Implement event replay mechanisms
 - [ ] Create replay timing strategies
 - [ ] Add replay detection evasion
@@ -139,6 +157,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create replay amplification
 
 ### Offline Abuse
+
 - [ ] Implement offline spam accumulation
 - [ ] Create delayed attack strategies
 - [ ] Add offline state simulation
@@ -148,6 +167,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 5: Evaluation and Metrics
 
 ### Core Metrics System
+
 - [ ] Implement false positive/negative tracking
 - [ ] Create relay load monitoring (CPU, bandwidth)
 - [ ] Add latency measurement system
@@ -155,6 +175,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create resilience metrics
 
 ### Advanced Analytics
+
 - [ ] Implement sybil resistance measurement
 - [ ] Create network health indicators
 - [ ] Add strategy effectiveness scoring
@@ -162,6 +183,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create performance benchmarking
 
 ### Visualization and Reporting
+
 - [ ] Create real-time metrics dashboard
 - [ ] Implement strategy comparison reports
 - [ ] Add network topology visualization
@@ -171,6 +193,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 6: Integration and Optimization
 
 ### Strategy Combinations
+
 - [ ] Implement strategy composition framework
 - [ ] Create strategy interaction testing
 - [ ] Add dynamic strategy switching
@@ -178,6 +201,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create optimization algorithms
 
 ### Performance Optimization
+
 - [ ] Profile and optimize simulation engine
 - [ ] Implement parallel simulation
 - [ ] Add memory optimization
@@ -185,6 +209,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Implement caching strategies
 
 ### Configuration and Extensibility
+
 - [ ] Create comprehensive configuration system
 - [ ] Implement plugin architecture
 - [ ] Add custom strategy support
@@ -194,6 +219,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 ## Phase 7: Validation and Documentation
 
 ### Testing and Validation
+
 - [ ] Achieve 100% test coverage
 - [ ] Create integration test suite
 - [ ] Add performance regression tests
@@ -201,6 +227,7 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Create benchmark suite
 
 ### Documentation
+
 - [ ] Write comprehensive API documentation
 - [ ] Create user guide and tutorials
 - [ ] Add strategy implementation guides
@@ -208,16 +235,18 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Write deployment and scaling guides
 
 ### Research and Analysis
+
 - [ ] Conduct strategy effectiveness research
 - [ ] Create comparative analysis studies
 - [ ] Add attack vector documentation
 - [ ] Implement reproducible experiments
 - [ ] Create research publication materials
 
----
+______________________________________________________________________
 
 ## Legend
+
 - [ ] Not started
 - [x] Completed
-- [~] In progress
-- [!] Blocked/needs attention
+- \[~\] In progress
+- \[!\] Blocked/needs attention

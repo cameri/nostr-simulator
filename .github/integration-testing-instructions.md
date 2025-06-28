@@ -19,4 +19,3 @@
 - Use `.step.ts` files for step definitions and `.feature` files for feature files.
 - Avoid using magic numbers or strings in tests. Use fixtures or factories to create test data.
 - Do not use test doubles (mocks, stubs, fakes) in integration tests unless absolutely necessary.
-

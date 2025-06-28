@@ -1,9 +1,9 @@
 # Simulator for Decentralized Anti-Spam and Anti-Abuse Strategies on Nostr
 
 To simulate and evaluate decentralized anti-spam and anti-abuse strategies on Nostr (or similar networks), without increasing centralization and while preserving offline capability, you’ll need a structured simulation framework that models both:
-	1.	User behavior and network interaction
-	2.	Adversarial strategies (spammers, attackers)
-	3.	Defense mechanisms (strategies)
+1\.	User behavior and network interaction
+2\.	Adversarial strategies (spammers, attackers)
+3\.	Defense mechanisms (strategies)
 
 The simulator must be extensible, allowing you to plug in different strategies and attack vectors.
 
@@ -14,14 +14,14 @@ Here’s a breakdown of how to do this, including simulation components, strateg
 🔁 Step-by-Step Simulation Framework
 
 1. Define Actor Types and Behaviors
-	•	Honest users: Use the network per protocol spec, occasionally offline, with normal publish/subscribe behavior.
-	•	Malicious actors: Attempt different types of spam/abuse:
-	•	Sybil attacks (many pubkeys)
-	•	Replay/flooding
-	•	Link spam or hate content
-	•	Offline evasion (abusing when moderation can’t act)
-	•	Relays: Apply policies locally (e.g. rate limits, reputation filters).
-	•	Clients: Behave per protocol spec, with optional client-side filtering.
+   •	Honest users: Use the network per protocol spec, occasionally offline, with normal publish/subscribe behavior.
+   •	Malicious actors: Attempt different types of spam/abuse:
+   •	Sybil attacks (many pubkeys)
+   •	Replay/flooding
+   •	Link spam or hate content
+   •	Offline evasion (abusing when moderation can’t act)
+   •	Relays: Apply policies locally (e.g. rate limits, reputation filters).
+   •	Clients: Behave per protocol spec, with optional client-side filtering.
 
 Use agents to model these actors, each with adjustable parameters.
 
@@ -55,16 +55,15 @@ Attack Type	Description
 🔁 Replay attack	Replay old events on new keys
 🌐 Offline abuse	Spammer posts while disconnected from moderation relays
 
-
 ⸻
 
 4. Implement Simulation Engine
 
 Use a discrete event simulation framework (or build your own lightweight engine). Components:
-	•	Node graph: Relays, users, messages
-	•	Event queue: Posts, filters, spam attempts
-	•	Offline/online state toggling
-	•	Metrics collection
+•	Node graph: Relays, users, messages
+•	Event queue: Posts, filters, spam attempts
+•	Offline/online state toggling
+•	Metrics collection
 
 Suggested tooling:
 Python + SimPy or custom JS agent model + D3.js for visualization.
@@ -74,23 +73,23 @@ Python + SimPy or custom JS agent model + D3.js for visualization.
 5. Evaluation Metrics
 
 Evaluate each strategy (and combo) on:
-	•	✅ False positives: Good messages blocked
-	•	✅ False negatives: Bad messages passed
-	•	⚙️ Relay load: Bandwidth, CPU
-	•	⏳ Latency: Delay added by strategy
-	•	📉 Spam reduction %
-	•	🧷 Resilience to offline abuse
-	•	🛡 Sybil resistance
+•	✅ False positives: Good messages blocked
+•	✅ False negatives: Bad messages passed
+•	⚙️ Relay load: Bandwidth, CPU
+•	⏳ Latency: Delay added by strategy
+•	📉 Spam reduction %
+•	🧷 Resilience to offline abuse
+•	🛡 Sybil resistance
 
 ⸻
 
 🧪 Example Strategy Test
 
 Scenario:
-	•	500 users, 5% are spammers
-	•	100 relays
-	•	3 attack types: Sybil + replay + offline abuse
-	•	Test PoW + WoT vs Rate limiting only
+•	500 users, 5% are spammers
+•	100 relays
+•	3 attack types: Sybil + replay + offline abuse
+•	Test PoW + WoT vs Rate limiting only
 
 Result Summary (sample simulated data):
 
@@ -99,13 +98,12 @@ PoW + WoT	93%	Low	Medium	✅
 Rate Limiting	70%	Medium	Low	✅
 WoT Only	75%	High	Medium	❌ (needs online graph)
 
-
 ⸻
 
 📌 Notes on Implementation
-	•	Offline support: Any strategy that requires shared reputation, trust graphs, or relay-wide consistency must be usable in eventual consistency mode.
-	•	No central authority: Use peer-reviewed, cryptographically verifiable schemes (e.g., PoW, hashchain validation).
-	•	Extensibility: Allow plug-and-play testing of new strategies or attacker behaviors.
+•	Offline support: Any strategy that requires shared reputation, trust graphs, or relay-wide consistency must be usable in eventual consistency mode.
+•	No central authority: Use peer-reviewed, cryptographically verifiable schemes (e.g., PoW, hashchain validation).
+•	Extensibility: Allow plug-and-play testing of new strategies or attacker behaviors.
 
 ⸻
 
