@@ -27,6 +27,7 @@ class AgentType(Enum):
     MALICIOUS_USER = "malicious_user"
     RELAY = "relay"
     CLIENT = "client"
+    USER = "user"
 
 
 class Message:

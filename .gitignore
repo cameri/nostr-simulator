@@ -6,6 +6,8 @@ env/
 ENV/
 env.bak/
 venv.bak/
+*.env
+!sample.env
 
 # Python
 __pycache__/

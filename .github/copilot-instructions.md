@@ -77,6 +77,16 @@ poetry run pytest --cov=src --cov-report=html --cov-report=term
 To run the simulator:
 poetry run python -m src.main
 
+## Code Graph Database Workflow
+
+1. Update the code graph database to the latest code structure by running the code analyzer on the `src` folder.
+
+2. Always query the code graph to understand existing structure before writing new code.
+
+3. Validate references to code entities using Neo4j queries to ensure accuracy and prevent hallucinations.
+
+Find more details (schemas, example queries) in the `.github/code-graph-database-instructions.md` file.
+
 ## Version Control
 
 - USe `jj` for version control. Detailed instructions are in the `using-jj-instructions.md` file.
@@ -118,3 +128,12 @@ poetry run python -m src.main
 - Spam reduction percentage
 - Resilience to offline abuse
 - Sybil resistance
+
+## Documentation
+
+- Project roadmap: `TODO.md`
+- Changes: `changelog.md`
+- Simulator details: `SIMULATOR.md`
+- Coding standards: `.github/python-instructions.md`
+- Definition of done: `.github/definition-of-done.md`
+- Code graph database usage: `.github/code-graph-database-instructions.md`
