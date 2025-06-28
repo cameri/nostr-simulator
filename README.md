@@ -1,0 +1,133 @@
+# Nostr Simulator
+
+A Python-based simulator for decentralized anti-spam and anti-abuse strategies on Nostr using agent-based modeling.
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Git
+- Jujutsu (jj) for version control
+
+### Setup
+
+1. **Clone and setup the project:**
+
+   ```bash
+   git clone <your-repo-url>
+   cd nostr-simulator
+   ./setup.sh
+   ```
+
+2. **Activate the virtual environment:**
+
+   ```bash
+   source .venv/bin/activate
+   ```
+
+3. **Verify installation:**
+
+   ```bash
+   python -m pytest --version
+   pre-commit --version
+   ```
+
+### Development Workflow
+
+#### Code Quality Tools
+
+The project uses several tools to maintain code quality:
+
+- **Black**: Code formatting
+- **isort**: Import sorting
+- **Ruff**: Fast Python linter
+- **MyPy**: Type checking
+- **Bandit**: Security linting
+- **mdformat**: Markdown formatting
+
+#### Running Quality Checks
+
+```bash
+# Run all pre-commit hooks
+pre-commit run --all-files
+
+# Individual tools
+black .
+isort .
+ruff check --fix .
+mypy .
+bandit -r src/
+```
+
+#### Testing
+
+```bash
+# Run tests
+pytest
+
+# Run with coverage
+pytest --cov=src --cov-report=html --cov-report=term
+```
+
+#### Running the Simulator
+
+```bash
+python -m src.main
+```
+
+### Project Structure
+
+```text
+├── .github/                 # GitHub configuration and documentation
+├── src/                     # Source code
+├── tests/                   # Test files
+├── docs/                    # Documentation
+├── requirements.txt         # Python dependencies
+├── setup.sh                 # Setup script
+├── .pre-commit-config.yaml  # Pre-commit configuration
+├── .gitignore              # Git ignore rules
+└── README.md               # This file
+```
+
+### Version Control
+
+This project uses both Git and Jujutsu (jj). See `.github/using-jj-instructions.md` for detailed instructions on using jj.
+
+### Dependencies
+
+The project includes dependencies for:
+
+- **Development Tools**: pre-commit, black, isort, ruff, mypy, bandit
+- **Documentation**: mkdocs, mkdocs-material, mdformat with mkdocs flavor
+- **Testing**: pytest, pytest-cov
+- **Simulation**: mesa (agent-based modeling), numpy, pandas, matplotlib, seaborn, networkx
+- **Utilities**: pydantic, pyyaml, rich
+
+### Configuration
+
+- **Type Checking**: Configured via `mypy.ini` or `pyproject.toml`
+- **Code Formatting**: Black and isort configured to work together
+- **Pre-commit**: Runs formatting, linting, and type checking on commit
+- **Testing**: Configured for 100% coverage requirement
+
+### Documentation
+
+- Project roadmap: `TODO.md`
+- Changes: `changelog.md`
+- Simulator details: `SIMULATOR.md`
+- Coding standards: `.github/python-instructions.md`
+- Definition of done: `.github/definition-of-done.md`
+
+## Contributing
+
+1. Activate the virtual environment: `source .venv/bin/activate`
+2. Make your changes
+3. Run quality checks: `pre-commit run --all-files`
+4. Run tests: `pytest --cov=src --cov-report=term`
+5. Update documentation as needed
+6. Commit using jj or git
+
+## License
+
+[Add your license information here]
