@@ -73,8 +73,25 @@ pytest --cov=src --cov-report=html --cov-report=term
 #### Running the Simulator
 
 ```bash
-python -m src.main
+# Run the main simulator (basic simulation)
+python -m src.nostr_simulator.main
+
+# Run anti-spam strategy scenarios
+python run_scenarios.py help          # List available scenarios
+python run_scenarios.py pow           # Run Proof of Work scenario
+python run_scenarios.py multi         # Run multi-strategy scenario
+python run_scenarios.py attack        # Run attack simulation scenario
+python run_scenarios.py all           # Run all scenarios
 ```
+
+#### Available Scenarios
+
+The project includes several scenarios to demonstrate anti-spam strategies:
+
+- **`pow`**: Demonstrates Proof of Work anti-spam strategy with different difficulty levels
+- **`multi`**: Shows multiple strategies working together (PoW + Rate Limiting)
+- **`attack`**: Simulates various attack vectors (Sybil, burst spam, hash-link spam, replay attacks)
+- **`all`**: Runs all available scenarios sequentially
 
 ### Project Structure
 

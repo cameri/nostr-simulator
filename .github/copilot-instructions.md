@@ -89,7 +89,7 @@ Find more details (schemas, example queries) in the `.github/code-graph-database
 
 ## Version Control
 
-- USe `jj` for version control. Detailed instructions are in the `using-jj-instructions.md` file.
+- Avoid using Git, use Jujutsu (jj) for version control. Detailed instructions are in the `using-jj-instructions.md` file.
 
 ### Simulation Framework
 
