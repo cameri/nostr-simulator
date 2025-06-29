@@ -68,11 +68,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Proof of Work (PoW)
 
-- [ ] Implement PoW calculation system
-- [ ] Create difficulty adjustment mechanism
-- [ ] Add PoW validation
-- [ ] Implement adaptive PoW for spam prevention
-- [ ] Add performance metrics for PoW
+- [x] Implement PoW calculation system
+- [x] Create difficulty adjustment mechanism
+- [x] Add PoW validation
+- [x] Implement adaptive PoW for spam prevention
+- [x] Add performance metrics for PoW
 
 ### Web of Trust (WoT)
 

@@ -19,7 +19,7 @@ def main() -> None:
 
     # Create simulation engine (simplified)
     print("\n📊 Creating simulation environment...")
-    
+
     # Create different behavior patterns
     social_butterfly = UserBehaviorPattern(
         posting_frequency=5.0,  # 5 posts per hour
@@ -37,10 +37,10 @@ def main() -> None:
 
     # Create users
     print("\n👥 Creating user agents...")
-    
+
     alice = HonestUserAgent("alice", behavior_pattern=social_butterfly)
     bob = HonestUserAgent("bob", behavior_pattern=lurker)
-    
+
     print(f"   🦋 Alice - Social Butterfly: {alice.behavior_pattern.posting_frequency} posts/hour")
     print(f"   👀 Bob - Lurker: {bob.behavior_pattern.posting_frequency} posts/hour")
 
@@ -52,35 +52,35 @@ def main() -> None:
     # Connect to relays
     print("\n🔗 Connecting to relays...")
     relays = ["relay1", "relay2", "relay3"]
-    
+
     alice.connect_to_relays(relays)
     bob.connect_to_relays(relays[:2])  # Bob connects to fewer relays
-    
+
     print(f"   Alice connected to: {alice.connected_relays}")
     print(f"   Bob connected to: {bob.connected_relays}")
 
     # Simulate posting
     print("\n📝 Simulating posting behavior...")
-    
+
     alice.post_text_note("Hello Nostr! Excited to be here! 🎉")
     bob.post_text_note("Just checking out this decentralized social network...")
-    
+
     print(f"   Alice posts made: {alice.posts_made}")
     print(f"   Bob posts made: {bob.posts_made}")
 
     # Simulate social interactions
     print("\n🤝 Simulating social interactions...")
-    
+
     # Alice discovers and might follow Bob
     alice.follow_user("bob")
     bob.add_follower("alice")
-    
+
     # Bob discovers Alice but might not follow (low follow ratio)
     follow_decision = bob.should_follow_user("alice")
     if follow_decision:
         bob.follow_user("alice")
         alice.add_follower("bob")
-    
+
     print(f"   Alice following: {alice.following}")
     print(f"   Alice followers: {alice.followers}")
     print(f"   Bob following: {bob.following}")
@@ -99,7 +99,7 @@ def main() -> None:
     for key, value in alice_stats.items():
         if key != "behavior_pattern":
             print(f"   {key}: {value}")
-    
+
     print("\n👤 Bob:")
     bob_stats = bob.get_stats()
     for key, value in bob_stats.items():
@@ -110,7 +110,7 @@ def main() -> None:
     print("\n🎲 Follow Decision Simulation (100 trials):")
     alice_follows = sum(alice.should_follow_user(f"user{i}") for i in range(100))
     bob_follows = sum(bob.should_follow_user(f"user{i}") for i in range(100))
-    
+
     print(f"   Alice would follow: {alice_follows}% of discovered users")
     print(f"   Bob would follow: {bob_follows}% of discovered users")
 
