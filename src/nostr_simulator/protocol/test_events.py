@@ -30,7 +30,7 @@ class TestNostrTag:
         """Test that empty list raises error."""
         try:
             NostrTag.from_list([])
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError as e:
             assert "Tag list cannot be empty" in str(e)
 

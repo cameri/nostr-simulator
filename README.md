@@ -6,7 +6,7 @@ A Python-based simulator for decentralized anti-spam and anti-abuse strategies o
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.11 or higher
 - Git
 - Jujutsu (jj) for version control
 
@@ -77,11 +77,11 @@ pytest --cov=src --cov-report=html --cov-report=term
 python -m src.nostr_simulator.main
 
 # Run anti-spam strategy scenarios
-python run_scenarios.py help          # List available scenarios
-python run_scenarios.py pow           # Run Proof of Work scenario
-python run_scenarios.py multi         # Run multi-strategy scenario
-python run_scenarios.py attack        # Run attack simulation scenario
-python run_scenarios.py all           # Run all scenarios
+python -m src.run_scenarios help          # List available scenarios
+python -m src.run_scenarios pow           # Run Proof of Work scenario
+python -m src.run_scenarios multi         # Run multi-strategy scenario
+python -m src.run_scenarios attack        # Run attack simulation scenario
+python -m src.run_scenarios all           # Run all scenarios
 ```
 
 #### Available Scenarios

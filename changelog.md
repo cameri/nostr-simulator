@@ -109,12 +109,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added extensive test coverage (25 tests, 98% coverage for WoT module)
   - Integrated with existing multi-strategy anti-spam framework
 
-### Fixed
+### Fixed (2025-06-30)
 
-- Resolved type checking issues in Event.__eq__ method for proper LSP compliance
-- Fixed missing type annotations for generic Dict types
-- Updated ruff configuration to use new lint section format
-- Installed types-PyYAML for proper YAML typing support
+- **Linting and Code Quality Improvements**
+  - Fixed all ruff linting issues across the codebase
+  - Replaced `assert False` with `raise AssertionError()` for better error handling
+  - Fixed unused variables and loop control variables
+  - Added proper exception chaining in validation module (`from err` or `from None`)
+  - Updated test cases for correct signature verification expectations
+
+### Changed (2025-06-30)
+
+- **Project Structure Reorganization**
+  - Moved `run_scenarios.py` from project root to `src/` directory
+  - Updated README commands to use `python -m src.run_scenarios` instead of direct script execution
+  - Updated Python version requirement from 3.8+ to 3.11+ in README
+  - Simplified import structure by removing need for sys.path modifications
 
 ### Validated
 

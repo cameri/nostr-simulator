@@ -72,8 +72,8 @@ class EventValidator:
 
         try:
             bytes.fromhex(event.pubkey)
-        except ValueError:
-            raise ValidationError("Public key must be valid hex")
+        except ValueError as e:
+            raise ValidationError("Public key must be valid hex") from e
 
         if not event.id:
             raise ValidationError("Event must have an ID")
@@ -83,8 +83,8 @@ class EventValidator:
 
         try:
             bytes.fromhex(event.id)
-        except ValueError:
-            raise ValidationError("Event ID must be valid hex")
+        except ValueError as e:
+            raise ValidationError("Event ID must be valid hex") from e
 
     def _validate_content_length(self, event: NostrEvent) -> None:
         """Validate content length."""
@@ -166,8 +166,8 @@ class EventValidator:
 
         try:
             bytes.fromhex(event.sig)
-        except ValueError:
-            raise ValidationError("Signature must be valid hex")
+        except ValueError as e:
+            raise ValidationError("Signature must be valid hex") from e
 
         # Create the signing data
         signing_data = [
@@ -197,7 +197,7 @@ class EventValidator:
             event = NostrEvent.from_dict(event_dict)
             self.validate_event(event)
         except (KeyError, ValueError, TypeError) as e:
-            raise ValidationError(f"Invalid event structure: {e}")
+            raise ValidationError(f"Invalid event structure: {e}") from e
 
     def is_valid_event(self, event: NostrEvent, check_signature: bool = True) -> bool:
         """Check if an event is valid without raising exceptions.

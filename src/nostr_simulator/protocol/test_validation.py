@@ -40,7 +40,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must have a public key" in str(e)
 
@@ -51,7 +51,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must be 64 hex characters" in str(e)
 
@@ -62,7 +62,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must be valid hex" in str(e)
 
@@ -73,7 +73,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "exceeds maximum length" in str(e)
 
@@ -87,7 +87,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "Too many tags" in str(e)
 
@@ -99,7 +99,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "name too long" in str(e)
 
@@ -111,7 +111,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "too many values" in str(e)
 
@@ -123,7 +123,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "value 0 too long" in str(e)
 
@@ -134,7 +134,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must be positive" in str(e)
 
@@ -150,7 +150,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "too far from current time" in str(e)
 
@@ -160,8 +160,8 @@ class TestEventValidator:
         # demonstrates that the type system itself prevents invalid kinds
         try:
             # This should raise ValueError when creating the enum
-            invalid_kind = NostrEventKind(-1)
-            assert False, "Should have raised ValueError for negative kind"
+            NostrEventKind(-1)
+            raise AssertionError("Should have raised ValueError for negative kind")
         except ValueError:
             # This is expected - IntEnum prevents negative values
             pass
@@ -177,7 +177,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must have 'e' tags" in str(e)
 
@@ -192,7 +192,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must have 'e' or 'p' tags" in str(e)
 
@@ -203,7 +203,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=False)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "ID mismatch" in str(e)
 
@@ -214,7 +214,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=True)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must have a signature" in str(e)
 
@@ -225,7 +225,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=True)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must be 128 hex characters" in str(e)
 
@@ -236,7 +236,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event(event, check_signature=True)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "must be valid hex" in str(e)
 
@@ -261,7 +261,7 @@ class TestEventValidator:
             event = NostrEvent.from_dict(event_dict)
             self.validator.validate_event(event, check_signature=False)
         except Exception as e:
-            assert False, f"Should not have raised exception: {e}"
+            raise AssertionError(f"Should not have raised exception: {e}") from e
 
     def test_validate_invalid_event_dict(self) -> None:
         """Test validation fails for invalid event dictionary."""
@@ -269,7 +269,7 @@ class TestEventValidator:
 
         try:
             self.validator.validate_event_dict(invalid_dict)
-            assert False, "Should have raised ValidationError"
+            raise AssertionError("Should have raised ValidationError")
         except ValidationError as e:
             assert "Invalid event structure" in str(e)
 

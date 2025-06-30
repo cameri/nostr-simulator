@@ -43,7 +43,7 @@ class TestNostrKeyPair:
         """Test creating keypair from invalid private key."""
         try:
             NostrKeyPair.from_private_key("invalid")
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError as e:
             assert "must be 64 hex characters" in str(e)
 
@@ -103,7 +103,8 @@ class TestKeyFunctions:
         """Test signature verification with valid format."""
         public_key = "a" * 64
         event_data = "test data"
-        signature = "b" * 64
+        # Use a signature that isn't all the same character
+        signature = "1234567890abcdef" * 8  # 128 hex chars, mixed pattern
 
         # Our simplified verification should pass for any valid format
         result = verify_signature(public_key, event_data, signature)
@@ -135,7 +136,7 @@ class TestKeyFunctions:
 
         signature = sign_event_dict(private_key, event_dict)
 
-        assert len(signature) == 64
+        assert len(signature) == 128  # Signatures are 128 hex chars (64 bytes)
         bytes.fromhex(signature)  # Should be valid hex
 
 

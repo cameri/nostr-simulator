@@ -178,7 +178,6 @@ class TestHashchainRollingCodes:
 
         # Initialize chain
         strategy.generate_code_for_user(pubkey, current_time)
-        initial_info = strategy.get_chain_info(pubkey)
 
         # Manually advance to near end of chain
         chain_state = strategy._user_chains[pubkey]

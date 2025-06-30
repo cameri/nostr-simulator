@@ -361,7 +361,7 @@ class TestClientAgent:
         client.connect_to_relay("relay1")
 
         # Create max allowed subscriptions
-        for i in range(client.max_subscriptions):
+        for _ in range(client.max_subscriptions):
             filters = [RelayFilter(kinds=[NostrEventKind.TEXT_NOTE])]
             subscription_id = client.subscribe_to_events("relay1", filters)
             assert subscription_id is not None

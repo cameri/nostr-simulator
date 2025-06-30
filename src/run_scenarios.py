@@ -2,11 +2,6 @@
 """Main entry point for running Nostr anti-spam scenarios."""
 
 import sys
-from pathlib import Path
-
-# Add src directory to path to allow imports
-src_path = Path(__file__).parent / "src"
-sys.path.insert(0, str(src_path))
 
 from nostr_simulator.scenarios.runner import run_scenario
 

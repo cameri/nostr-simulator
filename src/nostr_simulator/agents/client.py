@@ -321,7 +321,6 @@ class ClientAgent(BaseAgent):
         relay_id = event.data.get("relay_id")
         response_type = event.data.get("response_type")
         event_id = event.data.get("event_id")
-        accepted = event.data.get("accepted", False)
         message = event.data.get("message", "")
 
         self.logger.debug(

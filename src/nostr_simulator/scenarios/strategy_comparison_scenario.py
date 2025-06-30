@@ -247,7 +247,7 @@ def test_combined_strategies() -> None:
             :message_count
         ]
 
-        for i, content in enumerate(extended_messages):
+        for _, content in enumerate(extended_messages):
             event = NostrEvent(
                 kind=NostrEventKind.TEXT_NOTE,
                 content=content,

@@ -114,7 +114,7 @@ class TestTokenBucketRateLimiting:
         event = self.create_test_event()
 
         # First 3 events should be allowed
-        for i in range(3):
+        for _ in range(3):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
             assert "allows" in result.reason
@@ -313,7 +313,7 @@ class TestAdaptiveRateLimiting:
         event = self.create_test_event()
 
         # Should allow base_limit events
-        for i in range(5):
+        for _ in range(5):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
 
@@ -426,7 +426,7 @@ class TestPerKeyRateLimiting:
         event = self.create_test_event("unknown_key")
 
         # Should allow default_limit events
-        for i in range(3):
+        for _ in range(3):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
             assert result.metrics is not None
@@ -447,7 +447,7 @@ class TestPerKeyRateLimiting:
         event = self.create_test_event("special_key")
 
         # Should allow custom limit events (5, not 2)
-        for i in range(5):
+        for _ in range(5):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
             assert result.metrics is not None
