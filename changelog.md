@@ -109,6 +109,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added extensive test coverage (25 tests, 98% coverage for WoT module)
   - Integrated with existing multi-strategy anti-spam framework
 
+- **✅ COMPLETED Local Reputation Tokens Anti-Spam Strategy Implementation**
+  - Implemented comprehensive reputation token system for spam prevention
+  - Added `ReputationAccount` class with token balance, earning/spending tracking, and reputation scoring
+  - Created `ReputationTokenStrategy` with configurable token costs, earning rates, and reputation thresholds
+  - Implemented `ReputationTokenRenewal` strategy with automatic token renewal based on time intervals
+  - Added token decay mechanisms to prevent indefinite accumulation
+  - Created reputation-based bypass system for high-reputation users (>0.8 score)
+  - Added comprehensive test suite with 35 tests covering all token mechanics and edge cases
+  - Implemented token distribution analysis and account management features
+  - Created demonstration scenario showing honest user behavior, spam attacks, and token dynamics
+  - Added support for token penalties and manual token adjustments
+  - All reputation token TODO tasks marked complete ✅
+  - **Technical Details:**
+    - Token earning rate configurable (default: 0.1 tokens per event)
+    - Token spending cost configurable (default: 1.0 token per event)  
+    - Reputation score based on earned vs spent token ratio with time decay
+    - High reputation users (score >= threshold) bypass token costs
+    - Token decay prevents unlimited accumulation over time
+    - Maximum token cap prevents excessive hoarding
+    - Comprehensive validation and error handling
+  - **Files Added:**
+    - `src/nostr_simulator/anti_spam/reputation_tokens.py`
+    - `src/nostr_simulator/anti_spam/test_reputation_tokens.py`
+    - `src/nostr_simulator/scenarios/reputation_tokens_scenario.py`
+  - **Files Modified:**
+    - `src/nostr_simulator/anti_spam/__init__.py` (exported new strategies)
+    - `TODO.md` (marked Local Reputation Tokens tasks complete)
+
 ### Fixed (2025-06-30)
 
 - **Linting and Code Quality Improvements**

@@ -10,6 +10,7 @@ from .rate_limiting import (
     TokenBucketRateLimiting,
     TrustedUserBypassRateLimiting,
 )
+from .reputation_tokens import ReputationTokenRenewal, ReputationTokenStrategy
 from .wot import WebOfTrustStrategy
 
 __all__ = [
@@ -24,4 +25,6 @@ __all__ = [
     "TrustedUserBypassRateLimiting",
     "HashchainRollingCodes",
     "TimeBasedCodeRotation",
+    "ReputationTokenStrategy",
+    "ReputationTokenRenewal",
 ]

@@ -100,11 +100,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Local Reputation Tokens
 
-- [ ] Design reputation token system
-- [ ] Implement token earning mechanisms
-- [ ] Create token spending system
-- [ ] Add token validation
-- [ ] Implement token decay/renewal
+- [x] Design reputation token system
+- [x] Implement token earning mechanisms
+- [x] Create token spending system
+- [x] Add token validation
+- [x] Implement token decay/renewal
 
 ### Event Age Proof
 
