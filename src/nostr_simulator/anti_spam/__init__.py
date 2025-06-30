@@ -1,6 +1,8 @@
 """Anti-spam strategies for Nostr simulator."""
 
 from .base import AntiSpamStrategy, StrategyResult
+from .event_age import EventAgeStrategy, TimestampVerificationStrategy
+from .group_signature import GroupSignatureStrategy
 from .hashchain import HashchainRollingCodes, TimeBasedCodeRotation
 from .pow import ProofOfWorkStrategy
 from .rate_limiting import (
@@ -27,4 +29,7 @@ __all__ = [
     "TimeBasedCodeRotation",
     "ReputationTokenStrategy",
     "ReputationTokenRenewal",
+    "EventAgeStrategy",
+    "TimestampVerificationStrategy",
+    "GroupSignatureStrategy",
 ]

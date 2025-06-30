@@ -52,13 +52,17 @@ def run_reputation_tokens_scenario() -> None:
         event = create_text_note_event(f"Honest post {i+1}", honest_user)
         result = reputation_strategy.evaluate_event(event, time.time())
 
-        print(f"Post {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}")
+        print(
+            f"Post {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}"
+        )
 
         if result.allowed:
             reputation_strategy.update_state(event, time.time())
             account_info = reputation_strategy.get_account_info(honest_user.public_key)
             if account_info:
-                print(f"  Tokens: {account_info['tokens']:.1f}, Reputation: {account_info['reputation_score']:.2f}")
+                print(
+                    f"  Tokens: {account_info['tokens']:.1f}, Reputation: {account_info['reputation_score']:.2f}"
+                )
 
     # Test 2: Spam burst attack
     print("\n💥 Test 2: Spam burst attack")
@@ -78,22 +82,28 @@ def run_reputation_tokens_scenario() -> None:
             blocked_count += 1
 
         if i < 5 or not result.allowed:  # Show first 5 and any blocked
-            print(f"Spam {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}")
+            print(
+                f"Spam {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}"
+            )
 
     print(f"\nSpam results: {allowed_count} allowed, {blocked_count} blocked")
 
     spammer_info = reputation_strategy.get_account_info(spammer.public_key)
     if spammer_info:
-        print(f"Spammer tokens: {spammer_info['tokens']:.1f}, Reputation: {spammer_info['reputation_score']:.2f}")
+        print(
+            f"Spammer tokens: {spammer_info['tokens']:.1f}, Reputation: {spammer_info['reputation_score']:.2f}"
+        )
 
     # Test 3: Building high reputation
     print("\n⭐ Test 3: Building high reputation user")
     print("-" * 40)
 
     # Manually boost reputation to simulate long-term good behavior
-    trusted_account = reputation_strategy._get_or_create_account(trusted_user.public_key, time.time())
+    trusted_account = reputation_strategy._get_or_create_account(
+        trusted_user.public_key, time.time()
+    )
     trusted_account.earned_total += 50.0  # Simulate lots of earned tokens
-    trusted_account.spent_total = 10.0    # Minimal spending
+    trusted_account.spent_total = 10.0  # Minimal spending
     trusted_account.update_reputation_score(time.time())
 
     print(f"Boosted reputation score: {trusted_account.reputation_score:.2f}")
@@ -103,7 +113,9 @@ def run_reputation_tokens_scenario() -> None:
         event = create_text_note_event(f"Trusted user post {i+1}", trusted_user)
         result = reputation_strategy.evaluate_event(event, time.time())
 
-        print(f"Trusted post {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}")
+        print(
+            f"Trusted post {i+1}: {'✅ Allowed' if result.allowed else '❌ Blocked'} - {result.reason}"
+        )
 
         if result.allowed:
             reputation_strategy.update_state(event, time.time())
@@ -126,12 +138,14 @@ def run_reputation_tokens_scenario() -> None:
     future_time = time.time() + 86400
 
     # Check decay for honest user
-    honest_account = reputation_strategy._get_or_create_account(honest_user.public_key, time.time())
+    honest_account = reputation_strategy._get_or_create_account(
+        honest_user.public_key, time.time()
+    )
     tokens_before = honest_account.tokens
     honest_account.apply_decay(reputation_strategy.decay_rate, future_time)
     tokens_after = honest_account.tokens
 
-    print(f"Honest user tokens after 1 day:")
+    print("Honest user tokens after 1 day:")
     print(f"  Before decay: {tokens_before:.2f}")
     print(f"  After decay: {tokens_after:.2f}")
     print(f"  Decay amount: {tokens_before - tokens_after:.2f}")
