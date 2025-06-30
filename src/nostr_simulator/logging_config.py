@@ -4,7 +4,7 @@ import logging
 import logging.config
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 import yaml
 
@@ -57,7 +57,7 @@ def get_logger(name: str) -> logging.Logger:
 
 
 # Default logging configuration
-DEFAULT_LOGGING_CONFIG: dict[str, Any] = {
+DEFAULT_LOGGING_CONFIG: Dict[str, Any] = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {

@@ -76,11 +76,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Web of Trust (WoT)
 
-- [ ] Implement trust graph data structure
-- [ ] Create trust score calculation
-- [ ] Add trust propagation algorithms
-- [ ] Implement trust-based filtering
-- [ ] Create trust decay mechanisms
+- [x] Implement trust graph data structure
+- [x] Create trust score calculation
+- [x] Add trust propagation algorithms
+- [x] Implement trust-based filtering
+- [x] Create trust decay mechanisms
 
 ### Rate Limiting
 

@@ -5,6 +5,7 @@ from typing import Optional
 
 from . import (
     run_pow_scenario,
+    run_wot_scenario,
     run_multi_strategy_scenario,
     run_attack_simulation_scenario,
     run_user_behavior_scenario,
@@ -16,6 +17,7 @@ def print_available_scenarios():
     """Print list of available scenarios."""
     scenarios = {
         "pow": "Proof of Work anti-spam strategy demonstration",
+        "wot": "Web of Trust anti-spam strategy demonstration",
         "multi": "Multi-strategy anti-spam demonstration",
         "attack": "Attack simulation with various spam vectors",
         "users": "User behavior patterns and social interactions",
@@ -43,6 +45,8 @@ def run_scenario(scenario_name: Optional[str] = None):
 
     if scenario_name == "pow":
         run_pow_scenario()
+    elif scenario_name == "wot":
+        run_wot_scenario()
     elif scenario_name == "multi":
         run_multi_strategy_scenario()
     elif scenario_name == "attack":
@@ -56,10 +60,11 @@ def run_scenario(scenario_name: Optional[str] = None):
 
         scenarios_to_run = [
             ("1️⃣  PoW Scenario", run_pow_scenario),
-            ("2️⃣  Multi-Strategy Scenario", run_multi_strategy_scenario),
-            ("3️⃣  Attack Simulation Scenario", run_attack_simulation_scenario),
-            ("4️⃣  User Behavior Scenario", run_user_behavior_scenario),
-            ("5️⃣  Strategy Comparison Scenario", run_strategy_comparison_scenario),
+            ("2️⃣  WoT Scenario", run_wot_scenario),
+            ("3️⃣  Multi-Strategy Scenario", run_multi_strategy_scenario),
+            ("4️⃣  Attack Simulation Scenario", run_attack_simulation_scenario),
+            ("5️⃣  User Behavior Scenario", run_user_behavior_scenario),
+            ("6️⃣  Strategy Comparison Scenario", run_strategy_comparison_scenario),
         ]
 
         for i, (title, scenario_func) in enumerate(scenarios_to_run):
