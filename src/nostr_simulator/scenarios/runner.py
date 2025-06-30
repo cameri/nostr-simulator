@@ -13,7 +13,7 @@ from . import (
 )
 
 
-def print_available_scenarios():
+def print_available_scenarios() -> None:
     """Print list of available scenarios."""
     scenarios = {
         "pow": "Proof of Work anti-spam strategy demonstration",
@@ -32,7 +32,7 @@ def print_available_scenarios():
     print()
 
 
-def run_scenario(scenario_name: Optional[str] = None):
+def run_scenario(scenario_name: Optional[str] = None) -> None:
     """Run a specific scenario or show available scenarios."""
 
     if not scenario_name or scenario_name in ["-h", "--help", "help"]:

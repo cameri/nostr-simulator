@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import time
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 from ..config import MetricsConfig
 from ..logging_config import get_logger
@@ -12,6 +12,13 @@ from .events import Event
 
 if TYPE_CHECKING:
     from .engine import SimulationEngine
+
+
+class EngineProtocol(Protocol):
+    """Protocol for engine objects used in metrics collection."""
+
+    def get_queue_size(self) -> int: ...
+    def get_event_count(self) -> int: ...
 
 
 class MetricsCollector:
@@ -88,7 +95,7 @@ class MetricsCollector:
             current_time - self.last_collection_time
         ) >= self.config.collection_interval
 
-    def collect_metrics(self, current_time: float, engine: SimulationEngine) -> None:
+    def collect_metrics(self, current_time: float, engine: EngineProtocol) -> None:
         """Collect metrics at current time.
 
         Args:

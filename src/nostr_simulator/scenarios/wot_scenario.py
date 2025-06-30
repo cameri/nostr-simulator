@@ -31,7 +31,7 @@ def create_text_note_event(content: str, keypair: NostrKeyPair) -> NostrEvent:
     )
 
 
-def run_wot_scenario():
+def run_wot_scenario() -> None:
     """Run the Web of Trust anti-spam strategy scenario."""
     print("🎯 Nostr Simulator - Web of Trust Scenario")
     print("=" * 50)

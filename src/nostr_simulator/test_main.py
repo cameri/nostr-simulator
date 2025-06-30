@@ -2,14 +2,14 @@
 
 from unittest.mock import Mock, patch
 
-from .config import Config
+from .config import Config, SimulationConfig, MetricsConfig
 from .main import create_simulation, main
 
 
 class TestCreateSimulation:
     """Test cases for create_simulation function."""
 
-    def test_create_simulation_returns_engine(self):
+    def test_create_simulation_returns_engine(self) -> None:
         """Should create and return simulation engine."""
         mock_config = Mock(spec=Config)
 
@@ -24,25 +24,24 @@ class TestCreateSimulation:
                 mock_engine_class.assert_called_once_with(mock_config)
                 mock_agent_manager_class.assert_called_once_with(mock_engine)
 
-    def test_create_simulation_with_real_config(self):
+    def test_create_simulation_with_real_config(self) -> None:
         """Should create simulation with actual config object."""
-        # Create a minimal config for testing
-        config_data = {
-            "simulation": {"duration": 100.0, "time_step": 1.0, "seed": 42},
-            "metrics": {
-                "enabled": True,
-                "collection_interval": 10.0,
-                "output_file": "test_metrics.json",
-                "output_format": "json",
-            },
-        }
+        # Create a minimal config for testing        
+        config = Config(
+            simulation=SimulationConfig(duration=100.0, time_step=1.0, seed=42),
+            metrics=MetricsConfig(
+                enabled=True,
+                collection_interval=10.0,
+                output_file="test_metrics.json",
+                output_format="json",
+            ),
+        )
 
         with patch("nostr_simulator.main.SimulationEngine") as mock_engine_class:
             with patch("nostr_simulator.main.AgentManager"):
                 mock_engine = Mock()
                 mock_engine_class.return_value = mock_engine
 
-                config = Config(**config_data)
                 result = create_simulation(config)
 
                 assert result == mock_engine
@@ -52,7 +51,7 @@ class TestCreateSimulation:
 class TestMain:
     """Test cases for main function."""
 
-    def test_main_successful_execution(self):
+    def test_main_successful_execution(self) -> None:
         """Should execute simulation successfully."""
         mock_config = Mock(spec=Config)
         mock_engine = Mock()
@@ -85,7 +84,7 @@ class TestMain:
                         mock_logger.info.assert_any_call("Loaded configuration")
                         mock_logger.info.assert_any_call("Created simulation engine")
 
-    def test_main_keyboard_interrupt(self):
+    def test_main_keyboard_interrupt(self) -> None:
         """Should handle keyboard interrupt gracefully."""
         mock_config = Mock(spec=Config)
         mock_engine = Mock()
@@ -112,7 +111,7 @@ class TestMain:
                             )
                             mock_exit.assert_called_once_with(1)
 
-    def test_main_general_exception(self):
+    def test_main_general_exception(self) -> None:
         """Should handle general exceptions gracefully."""
         Mock(spec=Config)
         test_error = Exception("Test error")
@@ -134,7 +133,7 @@ class TestMain:
                         )
                         mock_exit.assert_called_once_with(1)
 
-    def test_main_config_loading_error(self):
+    def test_main_config_loading_error(self) -> None:
         """Should handle configuration loading errors."""
         config_error = FileNotFoundError("Config file not found")
 
@@ -155,7 +154,7 @@ class TestMain:
                         )
                         mock_exit.assert_called_once_with(1)
 
-    def test_main_simulation_creation_error(self):
+    def test_main_simulation_creation_error(self) -> None:
         """Should handle simulation creation errors."""
         mock_config = Mock(spec=Config)
         creation_error = ValueError("Invalid configuration")
@@ -181,7 +180,7 @@ class TestMain:
                             )
                             mock_exit.assert_called_once_with(1)
 
-    def test_main_simulation_run_error(self):
+    def test_main_simulation_run_error(self) -> None:
         """Should handle simulation runtime errors."""
         mock_config = Mock(spec=Config)
         mock_engine = Mock()
@@ -209,7 +208,7 @@ class TestMain:
                             )
                             mock_exit.assert_called_once_with(1)
 
-    def test_main_logs_final_metrics(self):
+    def test_main_logs_final_metrics(self) -> None:
         """Should log final metrics after successful simulation."""
         mock_config = Mock(spec=Config)
         mock_engine = Mock()
@@ -238,7 +237,7 @@ class TestMain:
                         expected_message = "Simulation completed. Processed 250 events"
                         mock_logger.info.assert_any_call(expected_message)
 
-    def test_main_handles_missing_metrics(self):
+    def test_main_handles_missing_metrics(self) -> None:
         """Should handle case where metrics don't include total_events_processed."""
         mock_config = Mock(spec=Config)
         mock_engine = Mock()
@@ -267,7 +266,7 @@ class TestMain:
 class TestMainEntryPoint:
     """Test cases for main entry point execution."""
 
-    def test_main_module_execution(self):
+    def test_main_module_execution(self) -> None:
         """Should call main function when executed as module."""
         with patch("nostr_simulator.main.main"):
             # Simulate module execution

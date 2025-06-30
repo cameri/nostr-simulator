@@ -2,7 +2,7 @@
 
 import random
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -126,7 +126,7 @@ def add_minimal_pow(event: NostrEvent, difficulty: int = 2) -> bool:
 
 def test_events_against_strategies(
     events: List[NostrEvent],
-    strategies: Dict[str, any],
+    strategies: Dict[str, Any],
     current_time: float,
     event_source: str
 ) -> Dict[str, int]:
@@ -164,7 +164,7 @@ def test_events_against_strategies(
     return stats
 
 
-def run_attack_simulation_scenario():
+def run_attack_simulation_scenario() -> None:
     """Run comprehensive attack simulation scenario."""
     print("⚔️  Nostr Simulator - Attack Simulation Scenario")
     print("=" * 60)

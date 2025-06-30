@@ -154,7 +154,7 @@ class TestWebOfTrustStrategy:
         event = NostrEvent(
             kind=NostrEventKind.TEXT_NOTE,
             content="Test content",
-            created_at=1.0,
+            created_at=1,
             pubkey="user1"
         )
         strategy.update_state(event, 1.0)
@@ -284,7 +284,7 @@ class TestWebOfTrustStrategy:
         event = NostrEvent(
             kind=NostrEventKind.CONTACTS,
             content="",
-            created_at=2.0,
+            created_at=2,
             pubkey="user1",
             tags=tags,
         )
@@ -307,7 +307,7 @@ class TestWebOfTrustStrategy:
         event = NostrEvent(
             kind=NostrEventKind.CONTACTS,
             content="",
-            created_at=3.0,
+            created_at=3,
             pubkey="user1",
             tags=tags,
         )
@@ -402,10 +402,10 @@ class TestWebOfTrustStrategy:
         )
         strategy._add_trust_relationship("root", "t1", 0.5, 1.0)
         # Exactly at threshold
-        event1 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2.0, pubkey="t1")
+        event1 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t1")
         res1 = strategy.evaluate_event(event1, 2.0)
         assert res1.allowed is True
         strategy._add_trust_relationship("root", "t2", 0.49, 1.0)
-        event2 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2.0, pubkey="t2")
+        event2 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t2")
         res2 = strategy.evaluate_event(event2, 2.0)
         assert res2.allowed is False

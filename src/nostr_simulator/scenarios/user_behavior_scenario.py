@@ -4,7 +4,7 @@ from ..agents.user import HonestUserAgent, UserBehaviorPattern
 from ..protocol.keys import NostrKeyPair
 
 
-def run_user_behavior_scenario():
+def run_user_behavior_scenario() -> None:
     """Demonstrate user agent functionality and behavior patterns."""
     print("👥 Nostr Simulator - User Behavior Scenario")
     print("=" * 50)

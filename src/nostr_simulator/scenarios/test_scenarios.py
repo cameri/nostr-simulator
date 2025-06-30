@@ -26,14 +26,14 @@ class TestScenarios:
         finally:
             sys.stdout = old_stdout
 
-    def test_pow_scenario_runs_successfully(self):
+    def test_pow_scenario_runs_successfully(self) -> None:
         """Test that PoW scenario runs without errors."""
         output = self.capture_output(run_pow_scenario)
         assert "Proof of Work Scenario" in output
         assert "Strategy metrics" in output
         assert "Scenario Summary" in output
 
-    def test_multi_strategy_scenario_runs_successfully(self):
+    def test_multi_strategy_scenario_runs_successfully(self) -> None:
         """Test that multi-strategy scenario runs without errors."""
         output = self.capture_output(run_multi_strategy_scenario)
         assert "Multi-Strategy Anti-Spam Scenario" in output
@@ -41,7 +41,7 @@ class TestScenarios:
         assert "SPAMMER user" in output
         assert "Final Statistics" in output
 
-    def test_attack_simulation_scenario_runs_successfully(self):
+    def test_attack_simulation_scenario_runs_successfully(self) -> None:
         """Test that attack simulation scenario runs without errors."""
         output = self.capture_output(run_attack_simulation_scenario)
         assert "Attack Simulation Scenario" in output
@@ -49,7 +49,7 @@ class TestScenarios:
         assert "Burst Spam Attack" in output
         assert "Overall Attack Defense Summary" in output
 
-    def test_user_behavior_scenario_runs_successfully(self):
+    def test_user_behavior_scenario_runs_successfully(self) -> None:
         """Test that user behavior scenario runs without errors."""
         output = self.capture_output(run_user_behavior_scenario)
         assert "User Behavior Scenario" in output
@@ -57,7 +57,7 @@ class TestScenarios:
         assert "Social graph statistics" in output or "User behavior scenario completed" in output
         assert "User Behavior Summary" in output or "Key Insights" in output
 
-    def test_strategy_comparison_scenario_runs_successfully(self):
+    def test_strategy_comparison_scenario_runs_successfully(self) -> None:
         """Test that strategy comparison scenario runs without errors."""
         output = self.capture_output(run_strategy_comparison_scenario)
         assert "Strategy Comparison Scenario" in output
@@ -66,7 +66,7 @@ class TestScenarios:
         assert "Combined Strategy" in output
         assert "Strategy Comparison Summary" in output or "Scenario Summary" in output
 
-    def test_all_scenarios_contain_expected_content(self):
+    def test_all_scenarios_contain_expected_content(self) -> None:
         """Test that scenarios produce expected content types."""
         # Test PoW scenario
         pow_output = self.capture_output(run_pow_scenario)

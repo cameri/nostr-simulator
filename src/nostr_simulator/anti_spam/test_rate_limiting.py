@@ -427,6 +427,7 @@ class TestPerKeyRateLimiting:
         for i in range(3):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
+            assert result.metrics is not None
             assert result.metrics["limit"] == 3
             assert result.metrics["is_custom_limit"] is False
 
@@ -447,6 +448,7 @@ class TestPerKeyRateLimiting:
         for i in range(5):
             result = strategy.evaluate_event(event, 0.0)
             assert result.allowed is True
+            assert result.metrics is not None
             assert result.metrics["limit"] == 5
             assert result.metrics["is_custom_limit"] is True
 
@@ -473,6 +475,7 @@ class TestPerKeyRateLimiting:
         # Should now allow more events
         result = strategy.evaluate_event(event, 70.0)  # Reset window
         assert result.allowed is True
+        assert result.metrics is not None
         assert result.metrics["limit"] == 5
 
     def test_remove_custom_limit(self) -> None:
@@ -486,6 +489,7 @@ class TestPerKeyRateLimiting:
         # Initially uses custom limit
         event = self.create_test_event("test_key")
         result = strategy.evaluate_event(event, 0.0)
+        assert result.metrics is not None
         assert result.metrics["limit"] == 10
 
         # Remove custom limit
@@ -493,6 +497,7 @@ class TestPerKeyRateLimiting:
 
         # Should now use default limit
         result = strategy.evaluate_event(event, 70.0)  # Reset window
+        assert result.metrics is not None
         assert result.metrics["limit"] == 2
 
 
@@ -553,6 +558,7 @@ class TestTrustedUserBypassRateLimiting:
             result = strategy.evaluate_event(trusted_event, 0.0)
             assert result.allowed is True
             assert "Trusted user bypasses" in result.reason
+            assert result.metrics is not None
             assert result.metrics["bypass_reason"] == "explicit_trust"
 
         # Untrusted user should be limited by base strategy
@@ -579,6 +585,7 @@ class TestTrustedUserBypassRateLimiting:
         result = strategy.evaluate_event(event, 0.0)
         assert result.allowed is True
         assert "WoT trusted user bypasses" in result.reason
+        assert result.metrics is not None
         assert result.metrics["bypass_reason"] == "wot_trust"
         assert result.metrics["trust_score"] == 0.9
 

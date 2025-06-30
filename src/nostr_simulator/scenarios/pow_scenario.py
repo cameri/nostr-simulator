@@ -60,7 +60,7 @@ def add_proof_of_work(event: NostrEvent, difficulty: int) -> bool:
     return False
 
 
-def run_pow_scenario():
+def run_pow_scenario() -> None:
     """Run the Proof of Work anti-spam strategy scenario."""
     print("🎯 Nostr Simulator - Proof of Work Scenario")
     print("=" * 50)

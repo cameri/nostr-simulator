@@ -12,8 +12,8 @@ class MockEventHandler(EventHandler):
 
     def __init__(self, handled_types: set[str]) -> None:
         self.handled_types = handled_types
-        self.handled_events = []
-        self.generated_events = []
+        self.handled_events: list[Event] = []
+        self.generated_events: list[Event] = []
 
     def handle_event(self, event: Event) -> list[Event]:
         """Handle an event and optionally generate new events."""
@@ -117,14 +117,17 @@ class TestEventQueue:
 
         # Should retrieve in time order
         event1 = queue.get_next_event()
+        assert event1 is not None
         assert event1.time == 10.0
         assert event1.event_id == id2
 
         event2 = queue.get_next_event()
+        assert event2 is not None
         assert event2.time == 15.0
         assert event2.event_id == id3
 
         event3 = queue.get_next_event()
+        assert event3 is not None
         assert event3.time == 20.0
         assert event3.event_id == id1
 
@@ -141,6 +144,7 @@ class TestEventQueue:
         # Event should still be in queue but marked as cancelled
         assert queue.size() == 1
         event = queue.get_next_event()
+        assert event is not None
         assert event.data.get("_cancelled") is True
 
         # Cancelling non-existent event should return False

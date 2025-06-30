@@ -114,6 +114,7 @@ class TestHashchainRollingCodes:
 
         # Generate valid code
         code = strategy.generate_code_for_user(pubkey, current_time)
+        assert code is not None
         event = self.create_test_event(pubkey, code.hex())
 
         # First use should be accepted
@@ -134,6 +135,7 @@ class TestHashchainRollingCodes:
 
         # Generate code
         code = strategy.generate_code_for_user(pubkey, current_time)
+        assert code is not None
         event = self.create_test_event(pubkey, code.hex())
 
         # Use code after it expires
@@ -152,10 +154,12 @@ class TestHashchainRollingCodes:
         # Get initial chain info
         strategy.generate_code_for_user(pubkey, current_time)
         initial_info = strategy.get_chain_info(pubkey)
+        assert initial_info is not None
         initial_sequence = initial_info["sequence_number"]
 
         # Use a valid code
         code = strategy.generate_code_for_user(pubkey, current_time)
+        assert code is not None
         event = self.create_test_event(pubkey, code.hex())
         result = strategy.evaluate_event(event, current_time)
         assert result.allowed is True
@@ -164,6 +168,7 @@ class TestHashchainRollingCodes:
         strategy.update_state(event, current_time)
         # Note: Chain advances in evaluate_event if valid
         final_info = strategy.get_chain_info(pubkey)
+        assert final_info is not None
         assert final_info["sequence_number"] > initial_sequence
 
     def test_chain_regeneration(self) -> None:
@@ -182,11 +187,13 @@ class TestHashchainRollingCodes:
 
         # Use code that should trigger regeneration
         code = strategy.generate_code_for_user(pubkey, current_time)
+        assert code is not None
         event = self.create_test_event(pubkey, code.hex())
         strategy.evaluate_event(event, current_time)
 
         # Chain should be regenerated
         final_info = strategy.get_chain_info(pubkey)
+        assert final_info is not None
         assert final_info["sequence_number"] == 0  # Reset to beginning
 
     def test_clock_skew_tolerance(self) -> None:
@@ -199,6 +206,7 @@ class TestHashchainRollingCodes:
 
         # Generate code for slightly past time
         past_code = strategy.generate_code_for_user(pubkey, base_time - 30.0)
+        assert past_code is not None
         event = self.create_test_event(pubkey, past_code.hex())
 
         # Should still be accepted within tolerance
@@ -297,6 +305,7 @@ class TestTimeBasedCodeRotation:
 
         assert result.allowed is True
         assert "Valid time-based code" in result.reason
+        assert result.metrics is not None
         assert result.metrics["slot_offset"] == 0
 
     def test_recent_time_code_accepted(self) -> None:
@@ -314,6 +323,7 @@ class TestTimeBasedCodeRotation:
         result = strategy.evaluate_event(event, base_time)
 
         assert result.allowed is True
+        assert result.metrics is not None
         assert result.metrics["slot_offset"] == 1
 
     def test_old_time_code_rejected(self) -> None:

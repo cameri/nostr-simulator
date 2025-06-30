@@ -1,7 +1,7 @@
 """Strategy comparison scenario for detailed anti-spam strategy analysis."""
 
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -37,7 +37,7 @@ def add_simple_pow(event: NostrEvent, difficulty: int, max_attempts: int = 5000)
     return False
 
 
-def test_pow_strategies():
+def test_pow_strategies() -> Dict[str, Dict[str, Dict[str, Any]]]:
     """Test PoW strategies with different difficulty levels."""
     print("🔨 Proof of Work Strategy Comparison")
     print("-" * 45)
@@ -112,7 +112,7 @@ def test_pow_strategies():
     return results
 
 
-def test_rate_limiting_strategies():
+def test_rate_limiting_strategies() -> None:
     """Test rate limiting with different configurations."""
     print("🚦 Rate Limiting Strategy Comparison")
     print("-" * 40)
@@ -174,7 +174,7 @@ def test_rate_limiting_strategies():
         print()
 
 
-def test_combined_strategies():
+def test_combined_strategies() -> None:
     """Test combined PoW + Rate Limiting strategies."""
     print("🎯 Combined Strategy Effectiveness")
     print("-" * 35)
@@ -267,7 +267,7 @@ def test_combined_strategies():
         print(f"   Messages allowed: {overall_stats['allowed']} ({overall_stats['allowed']/total*100:.1f}%)")
 
 
-def run_strategy_comparison_scenario():
+def run_strategy_comparison_scenario() -> None:
     """Run comprehensive strategy comparison scenario."""
     print("⚔️  Nostr Simulator - Strategy Comparison Scenario")
     print("=" * 60)

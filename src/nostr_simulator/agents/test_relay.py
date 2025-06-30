@@ -30,7 +30,7 @@ class TestRelayFilter:
         filter2 = RelayFilter(
             ids=["abc123"],
             authors=["pubkey1"],
-            kinds=[1, 3],
+            kinds=[NostrEventKind.TEXT_NOTE, NostrEventKind.CONTACTS],
             since=1000,
             until=2000,
             limit=10,

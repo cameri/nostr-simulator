@@ -14,7 +14,7 @@ from .logging_config import DEFAULT_LOGGING_CONFIG, get_logger, setup_logging
 class TestSetupLogging:
     """Test cases for setup_logging function."""
 
-    def test_setup_logging_with_valid_config_file(self):
+    def test_setup_logging_with_valid_config_file(self) -> None:
         """Should set up logging from valid YAML configuration file."""
         config = {
             "version": 1,
@@ -40,7 +40,7 @@ class TestSetupLogging:
         finally:
             os.unlink(config_path)
 
-    def test_setup_logging_with_nonexistent_config_file(self):
+    def test_setup_logging_with_nonexistent_config_file(self) -> None:
         """Should fall back to basic configuration when config file doesn't exist."""
         nonexistent_path = "/path/that/does/not/exist.yaml"
 
@@ -54,7 +54,7 @@ class TestSetupLogging:
                 call_args[1]["format"]
             )
 
-    def test_setup_logging_with_environment_variable_override(self):
+    def test_setup_logging_with_environment_variable_override(self) -> None:
         """Should use config path from environment variable when set."""
         config = DEFAULT_LOGGING_CONFIG
 
@@ -72,7 +72,7 @@ class TestSetupLogging:
         finally:
             os.unlink(env_config_path)
 
-    def test_setup_logging_with_invalid_yaml_file(self):
+    def test_setup_logging_with_invalid_yaml_file(self) -> None:
         """Should handle invalid YAML files gracefully."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write("invalid: yaml: content: [")
@@ -91,7 +91,7 @@ class TestSetupLogging:
 class TestGetLogger:
     """Test cases for get_logger function."""
 
-    def test_get_logger_returns_logger_instance(self):
+    def test_get_logger_returns_logger_instance(self) -> None:
         """Should return a logging.Logger instance with specified name."""
         logger_name = "test_logger"
         logger = get_logger(logger_name)
@@ -99,7 +99,7 @@ class TestGetLogger:
         assert isinstance(logger, logging.Logger)
         assert logger.name == logger_name
 
-    def test_get_logger_returns_same_instance_for_same_name(self):
+    def test_get_logger_returns_same_instance_for_same_name(self) -> None:
         """Should return the same logger instance for the same name."""
         logger_name = "same_logger"
         logger1 = get_logger(logger_name)
@@ -107,7 +107,7 @@ class TestGetLogger:
 
         assert logger1 is logger2
 
-    def test_get_logger_returns_different_instances_for_different_names(self):
+    def test_get_logger_returns_different_instances_for_different_names(self) -> None:
         """Should return different logger instances for different names."""
         logger1 = get_logger("logger1")
         logger2 = get_logger("logger2")
@@ -119,7 +119,7 @@ class TestGetLogger:
 class TestDefaultLoggingConfig:
     """Test cases for DEFAULT_LOGGING_CONFIG."""
 
-    def test_default_config_structure(self):
+    def test_default_config_structure(self) -> None:
         """Should have proper structure for logging configuration."""
         config = DEFAULT_LOGGING_CONFIG
 
@@ -131,7 +131,7 @@ class TestDefaultLoggingConfig:
         assert "loggers" in config
         assert "root" in config
 
-    def test_default_config_formatters(self):
+    def test_default_config_formatters(self) -> None:
         """Should have required formatters defined."""
         formatters = DEFAULT_LOGGING_CONFIG["formatters"]
 
@@ -145,7 +145,7 @@ class TestDefaultLoggingConfig:
         assert "%(name)s" in formatters["standard"]["format"]
         assert "%(message)s" in formatters["standard"]["format"]
 
-    def test_default_config_handlers(self):
+    def test_default_config_handlers(self) -> None:
         """Should have required handlers defined."""
         handlers = DEFAULT_LOGGING_CONFIG["handlers"]
 
@@ -164,7 +164,7 @@ class TestDefaultLoggingConfig:
         assert "maxBytes" in file_handler
         assert "backupCount" in file_handler
 
-    def test_default_config_loggers(self):
+    def test_default_config_loggers(self) -> None:
         """Should have required loggers defined."""
         loggers = DEFAULT_LOGGING_CONFIG["loggers"]
 
@@ -180,7 +180,7 @@ class TestDefaultLoggingConfig:
         assert "error_file" in main_logger["handlers"]
         assert main_logger["propagate"] is False
 
-    def test_default_config_root_logger(self):
+    def test_default_config_root_logger(self) -> None:
         """Should have root logger properly configured."""
         root = DEFAULT_LOGGING_CONFIG["root"]
 

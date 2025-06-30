@@ -1,7 +1,7 @@
 """Multi-strategy anti-spam scenario demonstrating various defense mechanisms."""
 
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -57,7 +57,7 @@ def add_pow_to_event(event: NostrEvent, difficulty: int, max_attempts: int = 100
 def simulate_user_behavior(
     user_type: str,
     keypair: NostrKeyPair,
-    strategies: Dict[str, any],
+    strategies: Dict[str, Any],
     current_time: float
 ) -> List[Tuple[NostrEvent, Dict[str, bool]]]:
     """Simulate different user behavior patterns."""
@@ -155,7 +155,7 @@ def simulate_user_behavior(
     return results
 
 
-def run_multi_strategy_scenario():
+def run_multi_strategy_scenario() -> None:
     """Run a comprehensive scenario testing multiple anti-spam strategies."""
     print("🎯 Nostr Simulator - Multi-Strategy Anti-Spam Scenario")
     print("=" * 60)
@@ -177,7 +177,7 @@ def run_multi_strategy_scenario():
     current_time = time.time()
 
     # Track overall statistics
-    total_stats = {
+    total_stats: Dict[str, Dict[str, Any]] = {
         "honest": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}},
         "spammer": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}},
         "sybil": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}}
