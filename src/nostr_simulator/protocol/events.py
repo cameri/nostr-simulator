@@ -252,9 +252,7 @@ class NostrEvent:
         if not self.sig:
             return False
 
-        if (
-            len(self.sig) != 64 and len(self.sig) != 128
-        ):  # Support both simulation (32 bytes) and real (64 bytes) as hex
+        if len(self.sig) != 128:  # Signatures must be 128 hex characters (64 bytes)
             return False
 
         try:

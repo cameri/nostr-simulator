@@ -178,6 +178,11 @@ class SimulationEngine:
                 self.logger.info("No more events to process")
                 break
 
+            # Check if the next event exceeds the duration limit
+            if next_event.time >= self.duration:
+                self.logger.info(f"Next event at time {next_event.time} exceeds duration limit {self.duration}")
+                break
+
             # Update simulation time
             self.current_time = next_event.time
             self.time_manager.set_current_time(self.current_time)

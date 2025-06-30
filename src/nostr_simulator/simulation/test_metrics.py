@@ -166,7 +166,7 @@ class TestMetricsCollector:
         """Should update max queue size when new maximum is reached."""
         config = MetricsConfig(enabled=True, collection_interval=1.0)
         collector = MetricsCollector(config)
-        collector.is_collecting = True
+        collector.start_collection()  # Properly initialize the collector
         collector.metrics["max_queue_size"] = 3
 
         mock_engine = MockEngine(queue_size=7, event_count=0)

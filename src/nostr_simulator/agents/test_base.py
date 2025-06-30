@@ -208,6 +208,7 @@ class TestBaseAgent:
     def test_message_queuing_while_offline(self) -> None:
         """Test that messages are queued when agent is offline."""
         agent = TestAgent("test_agent")
+        agent.activate(5.0)  # First activate the agent
         agent.go_offline(10.0)
 
         message = Message(

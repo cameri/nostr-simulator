@@ -101,9 +101,7 @@ def verify_signature(public_key: str, event_data: str, signature: str) -> bool:
         True if signature is valid, False otherwise.
     """
     # Basic format checks
-    if (
-        len(signature) != 64 and len(signature) != 128
-    ):  # Support both simulation (32 bytes) and real (64 bytes) as hex
+    if len(signature) != 128:  # Signatures must be 128 hex characters (64 bytes)
         return False
 
     try:
@@ -114,12 +112,8 @@ def verify_signature(public_key: str, event_data: str, signature: str) -> bool:
     # For simulation purposes, we need more sophisticated validation.
     # A signature of repeated characters or obviously invalid patterns
     # should be rejected even if they're properly formatted hex.    # Check for obviously invalid patterns
-    if len(set(signature)) == 1:  # All same character (like "aaaa...")
-        # Allow this for testing purposes if it's not all zeros
-        if signature != "0" * len(signature):
-            pass  # Allow for testing
-        else:
-            return False
+    if len(set(signature)) == 1:  # All same character (like "aaaa..." or "bbbb...")
+        return False
 
     if signature == "0" * len(signature):  # All zeros
         return False
@@ -160,7 +154,8 @@ def sign_event_dict(private_key: str, event_dict: dict[str, Any]) -> str:
     # Create signature using our simplified method
     signature_input = private_key + json_str
     signature_bytes = hashlib.sha256(signature_input.encode("utf-8")).digest()
-    return signature_bytes.hex()
+    # Double the signature to match 64-byte (128 hex char) requirement for Nostr compatibility
+    return (signature_bytes + signature_bytes).hex()
 
 
 class KeyManager:
