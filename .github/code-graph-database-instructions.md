@@ -24,12 +24,14 @@ The database contains the following node types:
 
 The database uses these relationship types:
 
-- **PYTHON_CALLS** - Method/function call relationships
+- **PYTHON_CALLS** - Method/function call relationships (Note: May have limited data in current analysis)
 - **PYTHON_HAS_PARAMETER** - Parameters belonging to methods/functions
 - **PYTHON_HAS_METHOD** - Methods belonging to classes
 - **PYTHON_IMPORTS** - Import relationships
 - **PYTHON_DEFINES_CLASS** - Files defining classes
 - **PYTHON_DEFINES_FUNCTION** - Files defining functions
+
+**Note**: Some relationship types like inheritance (`INHERITS_FROM`) are not currently captured by the analyzer.
 
 ### Node Properties
 
@@ -37,12 +39,12 @@ Common properties available on nodes:
 
 - `name` - The name of the entity
 - `entityId` - Unique identifier
-- `filePath` - Path to the source file
+- `filePath` - Full absolute path to the source file
 - `startLine` / `endLine` - Line number ranges
 - `startColumn` / `endColumn` - Column number ranges
 - `language` - Programming language (Python)
 - `createdAt` - Analysis timestamp
-- `parentId` - Parent entity ID (for nested entities)
+- `parentId` - Parent entity ID (available on methods, parameters)
 
 ## Common Queries
 
@@ -54,19 +56,20 @@ RETURN m.name as method_name
 ORDER BY m.name
 ```
 
-### 2. Find Class Hierarchies
+### 2. Find All Python Functions (Non-Class Methods)
 
 ```cypher
-MATCH (c:PythonClass)
-OPTIONAL MATCH (c)-[:INHERITS_FROM]->(parent:PythonClass)
-RETURN c.name as class_name, parent.name as parent_class
+MATCH (f:PythonFunction)
+RETURN f.name as function_name, f.filePath as file_path
+ORDER BY f.name
 ```
 
 ### 3. Find All Classes in a File
 
 ```cypher
-MATCH (f:File {name: "events.py"})-[:PYTHON_DEFINES_CLASS]->(c:PythonClass)
-RETURN c.name as class_name, c.startLine as line_number
+MATCH (f:File)-[:PYTHON_DEFINES_CLASS]->(c:PythonClass)
+WHERE f.filePath CONTAINS "events.py" AND NOT c.name STARTS WITH "Test"
+RETURN c.name as class_name, c.startLine as line_number, f.filePath as file_path
 ORDER BY c.startLine
 ```
 
@@ -80,12 +83,14 @@ RETURN m.name as method_name,
 ORDER BY m.name
 ```
 
-### 5. Find What Methods Call Other Methods
+### 5. Find Method Call Relationships (Note: Currently Limited Data)
 
 ```cypher
+// Note: Method call relationships may not be fully populated in current analysis
 MATCH (caller:PythonMethod)-[:PYTHON_CALLS]->(called:PythonMethod)
 RETURN caller.name as caller_method,
-       called.name as called_method
+       called.name as called_method,
+       caller.filePath as caller_file
 LIMIT 20
 ```
 
@@ -93,9 +98,10 @@ LIMIT 20
 
 ```cypher
 MATCH (f:File)-[:PYTHON_IMPORTS]->(m:PythonModule)
-RETURN f.name as file_name,
+WHERE f.filePath CONTAINS "/src/"
+RETURN f.filePath as file_name,
        collect(m.name) as imported_modules
-ORDER BY f.name
+ORDER BY f.filePath
 ```
 
 ### 7. Find Complex Methods (Many Parameters)
@@ -135,20 +141,101 @@ WHERE test IS NULL
 RETURN c.name as untested_class, c.filePath as file_path
 ```
 
-### 10. Analyze Code Coverage by File
+### 10. Analyze Code Structure by File
 
 ```cypher
 MATCH (f:File)
+WHERE f.filePath CONTAINS "/src/"
 OPTIONAL MATCH (f)-[:PYTHON_DEFINES_CLASS]->(c:PythonClass)
 OPTIONAL MATCH (f)-[:PYTHON_DEFINES_FUNCTION]->(func:PythonFunction)
-OPTIONAL MATCH (test:PythonClass)
-WHERE test.name STARTS WITH "Test"
-  AND (test.name CONTAINS c.name OR c.name CONTAINS test.name)
-RETURN f.name as file_name,
-       count(DISTINCT c) as class_count,
+WITH f, c, func,
+     size([class IN collect(DISTINCT c) WHERE class.name STARTS WITH "Test"]) as test_class_count,
+     count(DISTINCT c) as total_class_count
+RETURN f.filePath as file_path,
+       total_class_count as class_count,
        count(DISTINCT func) as function_count,
-       count(DISTINCT test) as test_class_count
-ORDER BY f.name
+       test_class_count
+ORDER BY total_class_count DESC, function_count DESC
+```
+
+### 11. Find All Classes and Their Methods
+
+```cypher
+MATCH (c:PythonClass)-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+WHERE NOT c.name STARTS WITH "Test"
+RETURN c.name as class_name,
+       c.filePath as file_path,
+       collect(m.name) as methods
+ORDER BY c.name
+```
+
+### 12. Find Files by Module Type
+
+```cypher
+// Find all test files
+MATCH (f:File)
+WHERE f.filePath CONTAINS "test_" OR f.filePath CONTAINS "/test"
+RETURN f.filePath as test_files
+ORDER BY f.filePath
+
+// Find all source files (non-test)
+MATCH (f:File)
+WHERE f.filePath CONTAINS "/src/"
+  AND NOT (f.filePath CONTAINS "test_" OR f.filePath CONTAINS "/test")
+RETURN f.filePath as source_files
+ORDER BY f.filePath
+```
+
+### 13. Analyze Method Complexity by Parameter Count
+
+```cypher
+MATCH (m:PythonMethod)-[:PYTHON_HAS_PARAMETER]->(p:PythonParameter)
+WITH m, count(p) as param_count
+RETURN param_count,
+       count(m) as method_count,
+       collect(m.name)[0..5] as sample_methods
+ORDER BY param_count DESC
+```
+
+### 14. Find Specific Class and All Its Details
+
+```cypher
+MATCH (c:PythonClass {name: "NostrEvent"})
+OPTIONAL MATCH (c)-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+OPTIONAL MATCH (m)-[:PYTHON_HAS_PARAMETER]->(p:PythonParameter)
+RETURN c.name as class_name,
+       c.filePath as file_path,
+       c.startLine as start_line,
+       collect(DISTINCT {
+         method: m.name,
+         parameters: collect(DISTINCT p.name)
+       }) as methods_with_params
+```
+
+### 15. Find Import Dependencies Between Files
+
+```cypher
+MATCH (f1:File)-[:PYTHON_IMPORTS]->(m:PythonModule)
+MATCH (f2:File)
+WHERE f2.filePath CONTAINS m.name
+  AND f1 <> f2
+  AND f1.filePath CONTAINS "/src/"
+  AND f2.filePath CONTAINS "/src/"
+RETURN f1.filePath as importing_file,
+       f2.filePath as imported_file,
+       m.name as module_name
+ORDER BY importing_file
+```
+
+### Explore Project Directory Structure
+
+```cypher
+MATCH (f:File)
+WHERE f.filePath CONTAINS "/src/nostr_simulator/"
+WITH split(split(f.filePath, "/src/nostr_simulator/")[1], "/")[0] as directory
+WHERE directory <> "" AND NOT directory ENDS WITH ".py"
+RETURN DISTINCT directory as subdirectories
+ORDER BY subdirectories
 ```
 
 ## Advanced Analysis Queries
@@ -156,14 +243,14 @@ ORDER BY f.name
 ### Code Complexity Analysis
 
 ```cypher
-// Find methods with many calls (potential complexity hotspots)
-MATCH (m:PythonMethod)-[:PYTHON_CALLS]->()
-WITH m, count(*) as call_count
-WHERE call_count > 5
+// Find methods with many parameters (potential complexity hotspots)
+MATCH (m:PythonMethod)-[:PYTHON_HAS_PARAMETER]->(p:PythonParameter)
+WITH m, count(p) as param_count
+WHERE param_count > 5
 RETURN m.name as method_name,
-       call_count,
+       param_count,
        m.filePath as file_path
-ORDER BY call_count DESC
+ORDER BY param_count DESC
 ```
 
 ### Dependency Analysis
@@ -183,13 +270,72 @@ ORDER BY import_count DESC
 ```cypher
 // Get overview of project structure
 MATCH (f:File)
+WHERE f.filePath CONTAINS "/src/"
 OPTIONAL MATCH (f)-[:PYTHON_DEFINES_CLASS]->(c:PythonClass)
 OPTIONAL MATCH (f)-[:PYTHON_DEFINES_FUNCTION]->(func:PythonFunction)
-RETURN f.name as file_name,
+WITH f, c, func,
+     size([class IN collect(DISTINCT c) WHERE class.name STARTS WITH "Test"]) as test_classes
+RETURN f.filePath as file_path,
        count(DISTINCT c) as classes,
        count(DISTINCT func) as functions,
-       size([class IN collect(DISTINCT c) WHERE class.name STARTS WITH "Test"]) as test_classes
+       test_classes
 ORDER BY classes DESC, functions DESC
+```
+
+## Practical Examples for Nostr Simulator
+
+Based on the current project structure, here are some practical queries specific to the Nostr Simulator codebase:
+
+### Find All Nostr Protocol Classes
+
+```cypher
+MATCH (c:PythonClass)
+WHERE c.filePath CONTAINS "/protocol/" AND NOT c.name STARTS WITH "Test"
+RETURN c.name as class_name, c.filePath as file_path
+ORDER BY c.name
+```
+
+### Find All Strategy-Related Classes
+
+```cypher
+MATCH (c:PythonClass)
+WHERE (c.name CONTAINS "Strategy" OR c.name CONTAINS "Spam" OR c.name CONTAINS "AntiSpam")
+  AND NOT c.name STARTS WITH "Test"
+RETURN c.name as strategy_class, c.filePath as file_path
+ORDER BY c.name
+```
+
+### Find All Agent Types and Their Methods
+
+```cypher
+MATCH (c:PythonClass)-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+WHERE c.filePath CONTAINS "/agents/" AND NOT c.name STARTS WITH "Test"
+RETURN c.name as agent_class,
+       collect(m.name) as methods
+ORDER BY c.name
+```
+
+### Find All Simulation Components
+
+```cypher
+MATCH (c:PythonClass)
+WHERE c.filePath CONTAINS "/simulation/" AND NOT c.name STARTS WITH "Test"
+RETURN c.name as component_class,
+       c.filePath as file_path,
+       c.startLine as line_number
+ORDER BY c.filePath, c.startLine
+```
+
+### Find Configuration Classes and Their Structure
+
+```cypher
+MATCH (c:PythonClass)
+WHERE c.name CONTAINS "Config"
+OPTIONAL MATCH (c)-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+RETURN c.name as config_class,
+       c.filePath as file_path,
+       collect(m.name) as methods
+ORDER BY c.name
 ```
 
 ## Usage Tips
@@ -270,7 +416,14 @@ Track code quality metrics over time using consistent queries.
 
 ## Updating the Database
 
-To refresh the analysis after code changes, re-run the code-analyzer-mcp tool. This will update the Neo4j database with the latest code structure.
+To refresh the analysis after code changes, run the code-analyzer-mcp tool:
+
+```bash
+# Using the MCP tool directly (as done in this project)
+# The tool will automatically analyze the src/ directory and update Neo4j
+```
+
+This will update the Neo4j database with the latest code structure.
 
 ## Neo4j Browser
 
@@ -286,3 +439,100 @@ Access the Neo4j browser to:
 The database connection details are configured in the MCP settings. Refer to your environment configuration for specific connection parameters.
 
 This code graph database provides powerful insights into the Nostr Simulator codebase structure and can help maintain code quality as the project grows.
+
+## Troubleshooting
+
+### APOC Plugin Error
+
+If you encounter the error "There is no procedure with the name `apoc.meta.data` registered", the APOC plugin is not installed in your Neo4j instance. You can work around this by using basic Cypher queries instead:
+
+```cypher
+// Instead of CALL apoc.meta.data(), use:
+CALL db.labels() YIELD label RETURN label ORDER BY label
+CALL db.relationshipTypes() YIELD relationshipType RETURN relationshipType ORDER BY relationshipType
+```
+
+### Database Connection Issues
+
+If you cannot connect to the Neo4j database:
+
+1. Ensure Neo4j is running on the expected port (default: 7687)
+2. Check the connection credentials in your MCP configuration
+3. Verify the database name is correct (default: codegraph)
+
+### Missing Data
+
+If queries return no results:
+
+1. Ensure the code-analyzer-mcp tool has been run on the src/ directory
+2. Check that the Neo4j database contains the expected nodes using: `MATCH (n) RETURN count(n)`
+3. Verify you're querying the correct database
+
+## Analysis Workflow for Development
+
+Here's a recommended workflow for using the code graph database during development:
+
+### 1. Initial Project Understanding
+
+```cypher
+// Get overview of project structure
+MATCH (f:File)
+WHERE f.filePath CONTAINS "/src/nostr_simulator/"
+WITH split(split(f.filePath, "/src/nostr_simulator/")[1], "/")[0] as directory
+WHERE directory <> "" AND NOT directory ENDS WITH ".py"
+RETURN DISTINCT directory as subdirectories
+ORDER BY subdirectories
+```
+
+### 2. Explore Module Components
+
+```cypher
+// For each subdirectory, find its classes and functions
+MATCH (c:PythonClass)
+WHERE c.filePath CONTAINS "/protocol/" AND NOT c.name STARTS WITH "Test"
+RETURN c.name as class_name, c.filePath as file_path
+ORDER BY c.name
+```
+
+### 3. Analyze Class Interface
+
+```cypher
+// For a specific class, understand its interface
+MATCH (c:PythonClass {name: "NostrEvent"})-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+OPTIONAL MATCH (m)-[:PYTHON_HAS_PARAMETER]->(p:PythonParameter)
+RETURN m.name as method_name,
+       collect(p.name) as parameters
+ORDER BY m.name
+```
+
+### 4. Check Test Coverage
+
+```cypher
+// Find classes that might need tests
+MATCH (c:PythonClass)
+WHERE NOT c.name STARTS WITH "Test"
+  AND NOT c.name STARTS WITH "Mock"
+OPTIONAL MATCH (test:PythonClass)
+WHERE test.name = "Test" + c.name
+WITH c, test
+WHERE test IS NULL
+RETURN c.name as potentially_untested_class,
+       c.filePath as file_path
+ORDER BY c.name
+```
+
+### 5. Identify Complex Components
+
+```cypher
+// Find classes with many methods (complexity indicators)
+MATCH (c:PythonClass)-[:PYTHON_HAS_METHOD]->(m:PythonMethod)
+WHERE NOT c.name STARTS WITH "Test"
+WITH c, count(m) as method_count
+WHERE method_count > 10
+RETURN c.name as complex_class,
+       method_count,
+       c.filePath as file_path
+ORDER BY method_count DESC
+```
+
+This workflow helps maintain code quality and understand the evolving architecture of the Nostr Simulator project.
