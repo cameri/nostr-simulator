@@ -84,19 +84,19 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Rate Limiting
 
-- [ ] Implement token bucket rate limiting
-- [ ] Create sliding window rate limiting
-- [ ] Add adaptive rate limiting
-- [ ] Implement per-key rate limiting
-- [ ] Create rate limit bypass for trusted users
+- [x] Implement token bucket rate limiting
+- [x] Create sliding window rate limiting
+- [x] Add adaptive rate limiting
+- [x] Implement per-key rate limiting
+- [x] Create rate limit bypass for trusted users
 
 ### Hashchain / Rolling Codes
 
-- [ ] Implement hashchain generation
-- [ ] Create rolling code validation
-- [ ] Add time-based code rotation
-- [ ] Implement chain verification
-- [ ] Create recovery mechanisms
+- [x] Implement hashchain generation
+- [x] Create rolling code validation
+- [x] Add time-based code rotation
+- [x] Implement chain verification
+- [x] Create recovery mechanisms
 
 ### Local Reputation Tokens
 

@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added (2025-06-29)
 
+- **✅ COMPLETED Hashchain and Rolling Codes Scenario Implementation**
+  - Added comprehensive hashchain scenario demonstrating cryptographic rolling codes
+  - Created scenarios for both HashchainRollingCodes and TimeBasedCodeRotation strategies
+  - Implemented test cases for legitimate user behavior and spam attack patterns
+  - Added clock skew tolerance testing with different time offsets
+  - Created performance comparison between hashchain and time-based strategies
+  - Added comprehensive demonstration of replay attack prevention
+  - Updated scenarios package to include and export hashchain scenario
+  - Fixed type annotations and code formatting for consistency
+  - All tests pass with proper error handling and validation
+
 - **✅ COMPLETED Phase 3 Proof of Work (PoW) Implementation** (Commit: 7d5655f8)
   - Implemented comprehensive anti-spam strategy framework with base classes
   - Added full Proof of Work strategy with adaptive difficulty adjustment
