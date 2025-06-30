@@ -14,6 +14,12 @@ Use `jj` for version control. Do not use `git` directly. `jj` is a distributed v
 To see the diff of your changes:
 jj diff
 
+To see the diff in git format (useful for standard diff output):
+jj diff --git
+
+To see the diff for a specific revision:
+jj diff --git -r \<revision\>
+
 To update your working copy or see the status of your changes:
 jj status
 
