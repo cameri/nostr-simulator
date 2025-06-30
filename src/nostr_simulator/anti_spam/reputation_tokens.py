@@ -131,7 +131,9 @@ class ReputationTokenStrategy(AntiSpamStrategy):
         self.max_tokens = max_tokens
         self._accounts: dict[str, ReputationAccount] = {}
 
-    def _get_or_create_account(self, pubkey: str, current_time: float) -> ReputationAccount:
+    def _get_or_create_account(
+        self, pubkey: str, current_time: float
+    ) -> ReputationAccount:
         """Get or create reputation account for a user.
 
         Args:

@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-import time
 from unittest.mock import patch
-
-import pytest
 
 from nostr_simulator.anti_spam.reputation_tokens import (
     ReputationAccount,
     ReputationTokenRenewal,
     ReputationTokenStrategy,
 )
-from nostr_simulator.protocol.events import NostrEvent, NostrEventKind, NostrTag
+from nostr_simulator.protocol.events import NostrEvent, NostrEventKind
 
 
 class TestReputationAccount:
@@ -168,8 +165,10 @@ class TestReputationAccount:
         account.update_reputation_score(44200.0)
 
         # Score should be reduced due to time decay (50% of 24 hours = 0.5 recency)
-        expected_score = min(1.0, 2.0 * 0.7 + 0.5 * 0.3)  # ~1.0 (capped)
-        assert account.reputation_score > 0.9  # Should still be high but less than perfect
+        # Expected score would be min(1.0, 2.0 * 0.7 + 0.5 * 0.3) ≈ 1.0 (capped)
+        assert (
+            account.reputation_score > 0.9
+        )  # Should still be high but less than perfect
 
     def test_update_reputation_score_no_spending(self) -> None:
         """Test reputation score with no spending history."""
@@ -241,7 +240,9 @@ class TestReputationTokenStrategy:
 
     def test_evaluate_event_new_user_sufficient_tokens(self) -> None:
         """Test evaluating event for new user with sufficient tokens."""
-        strategy = ReputationTokenStrategy(initial_tokens=10.0, post_cost=1.0, reputation_threshold=0.9)
+        strategy = ReputationTokenStrategy(
+            initial_tokens=10.0, post_cost=1.0, reputation_threshold=0.9
+        )
 
         event = NostrEvent(
             id="test_id",
@@ -259,12 +260,16 @@ class TestReputationTokenStrategy:
         assert result.allowed is True
         assert "Token payment successful" in result.reason
         assert result.metrics is not None
-        assert result.metrics["tokens_remaining"] == 10.0  # Tokens not spent yet in evaluate
+        assert (
+            result.metrics["tokens_remaining"] == 10.0
+        )  # Tokens not spent yet in evaluate
         assert result.metrics["bypassed_cost"] is False
 
     def test_evaluate_event_insufficient_tokens(self) -> None:
         """Test evaluating event with insufficient tokens."""
-        strategy = ReputationTokenStrategy(initial_tokens=0.5, post_cost=1.0, reputation_threshold=0.9)
+        strategy = ReputationTokenStrategy(
+            initial_tokens=0.5, post_cost=1.0, reputation_threshold=0.9
+        )
 
         event = NostrEvent(
             id="test_id",
@@ -305,7 +310,7 @@ class TestReputationTokenStrategy:
         # Create account and boost reputation properly
         account = strategy._get_or_create_account("trusted_user", 1000.0)
         account.earned_total = 50.0  # High earned total
-        account.spent_total = 10.0   # Lower spent total for good ratio
+        account.spent_total = 10.0  # Lower spent total for good ratio
         account.last_activity = 1000.0  # Recent activity
         account.update_reputation_score(1000.0)
 
@@ -553,7 +558,9 @@ class TestReputationTokenRenewal:
     def test_evaluate_event_no_renewal_needed(self) -> None:
         """Test evaluation when no renewal is needed."""
         base_strategy = ReputationTokenStrategy(reputation_threshold=0.9)
-        renewal = ReputationTokenRenewal(base_strategy, renewal_rate=1.0, renewal_interval=3600.0)
+        renewal = ReputationTokenRenewal(
+            base_strategy, renewal_rate=1.0, renewal_interval=3600.0
+        )
 
         event = NostrEvent(
             id="test_id",
@@ -577,7 +584,7 @@ class TestReputationTokenRenewal:
             initial_tokens=2.0,
             post_cost=1.0,
             reputation_threshold=0.9,
-            decay_rate=0.0  # Disable decay for this test
+            decay_rate=0.0,  # Disable decay for this test
         )
         renewal = ReputationTokenRenewal(
             base_strategy,
@@ -601,7 +608,9 @@ class TestReputationTokenRenewal:
         renewal._last_renewal["user"] = 1000.0 - 3600.0  # 1 hour ago
 
         with patch("time.time", return_value=1000.0):
-            result = renewal.evaluate_event(event, 4600.0)  # Current time allows renewal
+            result = renewal.evaluate_event(
+                event, 4600.0
+            )  # Current time allows renewal
 
         # Should have been renewed and now allowed
         assert result.allowed is True
