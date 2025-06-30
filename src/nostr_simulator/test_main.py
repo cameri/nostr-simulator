@@ -2,7 +2,7 @@
 
 from unittest.mock import Mock, patch
 
-from .config import Config, SimulationConfig, MetricsConfig
+from .config import Config, MetricsConfig, SimulationConfig
 from .main import create_simulation, main
 
 
@@ -26,9 +26,9 @@ class TestCreateSimulation:
 
     def test_create_simulation_with_real_config(self) -> None:
         """Should create simulation with actual config object."""
-        # Create a minimal config for testing        
+        # Create a minimal config for testing
         config = Config(
-            simulation=SimulationConfig(duration=100.0, time_step=1.0, seed=42),
+            simulation=SimulationConfig(duration=100.0, time_step=1.0, random_seed=42),
             metrics=MetricsConfig(
                 enabled=True,
                 collection_interval=10.0,

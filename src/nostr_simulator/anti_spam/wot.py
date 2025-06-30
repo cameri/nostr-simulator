@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -30,8 +29,12 @@ class TrustNode:
     trust_score: float = 0.0
     trusted_by: set[str] = field(default_factory=set)
     trusts: set[str] = field(default_factory=set)
-    _trust_scores_from: dict[str, tuple[float, float]] = field(default_factory=dict)  # pubkey -> (score, timestamp)
-    _trust_scores_for: dict[str, tuple[float, float]] = field(default_factory=dict)  # pubkey -> (score, timestamp)
+    _trust_scores_from: dict[str, tuple[float, float]] = field(
+        default_factory=dict
+    )  # pubkey -> (score, timestamp)
+    _trust_scores_for: dict[str, tuple[float, float]] = field(
+        default_factory=dict
+    )  # pubkey -> (score, timestamp)
 
     def add_trusted_by(self, pubkey: str, score: float, timestamp: float = 0.0) -> None:
         """Add a pubkey that trusts this node."""
@@ -151,7 +154,9 @@ class WebOfTrustStrategy(AntiSpamStrategy):
             reason = f"Sufficient trust score: {trust_score:.3f}"
         else:
             self._metrics["rejected_events"] += 1
-            reason = f"Insufficient trust score: {trust_score:.3f} < {self.min_trust_score}"
+            reason = (
+                f"Insufficient trust score: {trust_score:.3f} < {self.min_trust_score}"
+            )
 
         return StrategyResult(
             allowed=allowed,
@@ -269,21 +274,33 @@ class WebOfTrustStrategy(AntiSpamStrategy):
                     if trusted_by_pubkey not in visited:
                         # Get trust score and apply decay
                         base_score = node.get_trust_score_from(trusted_by_pubkey)
-                        trust_timestamp = node.get_trust_timestamp_from(trusted_by_pubkey)
+                        trust_timestamp = node.get_trust_timestamp_from(
+                            trusted_by_pubkey
+                        )
 
                         # Apply time-based decay
                         time_elapsed = current_time - trust_timestamp
-                        decayed_score = base_score * (self.trust_decay_factor ** time_elapsed)
+                        decayed_score = base_score * (
+                            self.trust_decay_factor**time_elapsed
+                        )
 
                         # For direct trust (depth 0), don't apply propagation factor
                         if depth == 0:
                             propagated_score = decayed_score
                         else:
                             # Apply propagation factor for transitive trust
-                            propagated_score = current_score * decayed_score * self.trust_propagation_factor
+                            propagated_score = (
+                                current_score
+                                * decayed_score
+                                * self.trust_propagation_factor
+                            )
 
-                        if propagated_score > 0.01:  # Avoid exploring very low trust paths
-                            queue.append((trusted_by_pubkey, propagated_score, depth + 1))
+                        if (
+                            propagated_score > 0.01
+                        ):  # Avoid exploring very low trust paths
+                            queue.append(
+                                (trusted_by_pubkey, propagated_score, depth + 1)
+                            )
 
         return min(max_trust_score, 1.0)
 
@@ -309,7 +326,9 @@ class WebOfTrustStrategy(AntiSpamStrategy):
             "total_nodes": len(self._trust_graph),
             "total_edges": total_edges,
             "bootstrapped_nodes": len(self.bootstrapped_trusted_keys),
-            "average_trust_score": sum(trust_scores) / len(trust_scores) if trust_scores else 0.0,
+            "average_trust_score": (
+                sum(trust_scores) / len(trust_scores) if trust_scores else 0.0
+            ),
             "max_trust_score": max(trust_scores) if trust_scores else 0.0,
         }
 

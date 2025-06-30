@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-import pytest
-
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
-from .base import StrategyResult
-from .wot import WebOfTrustStrategy, TrustLevel, TrustNode
+from .wot import TrustLevel, TrustNode, WebOfTrustStrategy
 
 
 class TestTrustNode:
@@ -71,7 +68,7 @@ class TestWebOfTrustStrategy:
             min_trust_score=0.7,
             trust_decay_factor=0.95,
             max_trust_depth=5,
-            bootstrapped_trusted_keys=trusted_keys
+            bootstrapped_trusted_keys=trusted_keys,
         )
 
         assert strategy.min_trust_score == 0.7
@@ -88,7 +85,7 @@ class TestWebOfTrustStrategy:
             kind=NostrEventKind.TEXT_NOTE,
             content="Hello world",
             created_at=1234567890,
-            pubkey="trusted_key"
+            pubkey="trusted_key",
         )
 
         result = strategy.evaluate_event(event, 1234567890.0)
@@ -106,7 +103,7 @@ class TestWebOfTrustStrategy:
             kind=NostrEventKind.TEXT_NOTE,
             content="Hello world",
             created_at=1234567890,
-            pubkey="unknown_key"
+            pubkey="unknown_key",
         )
 
         result = strategy.evaluate_event(event, 1234567890.0)
@@ -131,7 +128,7 @@ class TestWebOfTrustStrategy:
             content="",
             created_at=1234567890,
             pubkey="user1",
-            tags=tags
+            tags=tags,
         )
 
         strategy.update_state(event, 1234567890.0)
@@ -155,7 +152,7 @@ class TestWebOfTrustStrategy:
             kind=NostrEventKind.TEXT_NOTE,
             content="Test content",
             created_at=1,
-            pubkey="user1"
+            pubkey="user1",
         )
         strategy.update_state(event, 1.0)
 
@@ -168,7 +165,9 @@ class TestWebOfTrustStrategy:
         strategy = WebOfTrustStrategy(bootstrapped_trusted_keys=trusted_keys)
 
         # Add direct trust relationship
-        strategy._add_trust_relationship("trusted_user", "target_user", 0.8, 1234567890.0)
+        strategy._add_trust_relationship(
+            "trusted_user", "target_user", 0.8, 1234567890.0
+        )
 
         score = strategy._calculate_trust_score("target_user", 1234567890.0)
         assert score == 0.8
@@ -179,12 +178,16 @@ class TestWebOfTrustStrategy:
         strategy = WebOfTrustStrategy(
             bootstrapped_trusted_keys=trusted_keys,
             max_trust_depth=2,
-            trust_propagation_factor=0.8
+            trust_propagation_factor=0.8,
         )
 
         # Create trust chain: root_user -> intermediate_user -> target_user
-        strategy._add_trust_relationship("root_user", "intermediate_user", 0.9, 1234567890.0)
-        strategy._add_trust_relationship("intermediate_user", "target_user", 0.8, 1234567890.0)
+        strategy._add_trust_relationship(
+            "root_user", "intermediate_user", 0.9, 1234567890.0
+        )
+        strategy._add_trust_relationship(
+            "intermediate_user", "target_user", 0.8, 1234567890.0
+        )
 
         score = strategy._calculate_trust_score("target_user", 1234567890.0)
         # Should be 0.8 (from intermediate) * 0.9 (from root) * 0.8 (propagation factor) = 0.576
@@ -195,8 +198,7 @@ class TestWebOfTrustStrategy:
         """Test trust score decay over time."""
         trusted_keys = {"user1"}
         strategy = WebOfTrustStrategy(
-            trust_decay_factor=0.9,
-            bootstrapped_trusted_keys=trusted_keys
+            trust_decay_factor=0.9, bootstrapped_trusted_keys=trusted_keys
         )
 
         # Add trust at time 0
@@ -205,7 +207,7 @@ class TestWebOfTrustStrategy:
         # Check trust score after some time
         # Assuming 1 time unit passes
         score = strategy._calculate_trust_score("user2", 1.0)
-        expected_score = 1.0 * (0.9 ** 1)
+        expected_score = 1.0 * (0.9**1)
         assert abs(score - expected_score) < 0.01
 
     def test_get_metrics(self) -> None:
@@ -220,14 +222,14 @@ class TestWebOfTrustStrategy:
             kind=NostrEventKind.TEXT_NOTE,
             content="Hello",
             created_at=1234567890,
-            pubkey="trusted_key"
+            pubkey="trusted_key",
         )
 
         event2 = NostrEvent(
             kind=NostrEventKind.TEXT_NOTE,
             content="Hello",
             created_at=1234567890,
-            pubkey="untrusted_key"
+            pubkey="untrusted_key",
         )
 
         strategy.evaluate_event(event1, 1234567890.0)
@@ -251,7 +253,7 @@ class TestWebOfTrustStrategy:
             kind=NostrEventKind.TEXT_NOTE,
             content="Hello",
             created_at=1234567890,
-            pubkey="some_key"
+            pubkey="some_key",
         )
 
         strategy.evaluate_event(event, 1234567890.0)
@@ -277,7 +279,7 @@ class TestWebOfTrustStrategy:
         strategy = WebOfTrustStrategy()
 
         tags = [
-            NostrTag("p", []),               # Empty values
+            NostrTag("p", []),  # Empty values
             NostrTag("e", ["not_a_pubkey"]),  # Wrong tag type
             NostrTag("p", ["valid_pubkey"]),
         ]
@@ -357,7 +359,9 @@ class TestWebOfTrustStrategy:
 
     def test_calculate_trust_score_with_cycle(self) -> None:
         """Test trust score calculation handles cycles without infinite loop."""
-        strategy = WebOfTrustStrategy(bootstrapped_trusted_keys={"root"}, max_trust_depth=3)
+        strategy = WebOfTrustStrategy(
+            bootstrapped_trusted_keys={"root"}, max_trust_depth=3
+        )
         strategy._add_trust_relationship("root", "a", 0.9, 1.0)
         strategy._add_trust_relationship("a", "b", 0.8, 1.0)
         strategy._add_trust_relationship("b", "a", 0.7, 1.0)
@@ -367,7 +371,9 @@ class TestWebOfTrustStrategy:
 
     def test_calculate_trust_score_respects_max_depth(self) -> None:
         """Test trust score respects max_trust_depth limit."""
-        strategy = WebOfTrustStrategy(bootstrapped_trusted_keys={"root"}, max_trust_depth=1)
+        strategy = WebOfTrustStrategy(
+            bootstrapped_trusted_keys={"root"}, max_trust_depth=1
+        )
         strategy._add_trust_relationship("root", "a", 0.9, 1.0)
         strategy._add_trust_relationship("a", "b", 0.8, 1.0)
         score_b = strategy._calculate_trust_score("b", 2.0)
@@ -376,7 +382,9 @@ class TestWebOfTrustStrategy:
 
     def test_calculate_trust_score_filters_low_propagation(self) -> None:
         """Test very low propagated trust paths are filtered out."""
-        strategy = WebOfTrustStrategy(bootstrapped_trusted_keys={"root"}, trust_propagation_factor=0.01)
+        strategy = WebOfTrustStrategy(
+            bootstrapped_trusted_keys={"root"}, trust_propagation_factor=0.01
+        )
         strategy._add_trust_relationship("root", "a", 0.01, 1.0)
         strategy._add_trust_relationship("a", "b", 0.01, 1.0)
         score = strategy._calculate_trust_score("b", 2.0)
@@ -384,7 +392,9 @@ class TestWebOfTrustStrategy:
 
     def test_calculate_trust_score_multiple_paths(self) -> None:
         """Test trust score chooses maximum among multiple paths."""
-        strategy = WebOfTrustStrategy(bootstrapped_trusted_keys={"k1","k2"}, trust_propagation_factor=0.8)
+        strategy = WebOfTrustStrategy(
+            bootstrapped_trusted_keys={"k1", "k2"}, trust_propagation_factor=0.8
+        )
         strategy._add_trust_relationship("k1", "target", 0.6, 1.0)
         strategy._add_trust_relationship("k2", "mid", 0.9, 1.0)
         strategy._add_trust_relationship("mid", "target", 0.8, 1.0)
@@ -402,10 +412,14 @@ class TestWebOfTrustStrategy:
         )
         strategy._add_trust_relationship("root", "t1", 0.5, 1.0)
         # Exactly at threshold
-        event1 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t1")
+        event1 = NostrEvent(
+            kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t1"
+        )
         res1 = strategy.evaluate_event(event1, 2.0)
         assert res1.allowed is True
         strategy._add_trust_relationship("root", "t2", 0.49, 1.0)
-        event2 = NostrEvent(kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t2")
+        event2 = NostrEvent(
+            kind=NostrEventKind.TEXT_NOTE, content="", created_at=2, pubkey="t2"
+        )
         res2 = strategy.evaluate_event(event2, 2.0)
         assert res2.allowed is False

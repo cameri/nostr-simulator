@@ -83,6 +83,7 @@ class TestNostrEvent:
         json_str = json.dumps(serialized, separators=(",", ":"), ensure_ascii=False)
 
         import hashlib
+
         expected_id = hashlib.sha256(json_str.encode("utf-8")).hexdigest()
 
         assert event.id == expected_id
@@ -344,24 +345,46 @@ class TestNostrEvent:
             "sig": "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a",
             "created_at": 1751119008,
             "tags": [
-                ["e", "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131", "", "root"],
-                ["e", "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53", "", "reply"],
-                ["p", "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"]
+                [
+                    "e",
+                    "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131",
+                    "",
+                    "root",
+                ],
+                [
+                    "e",
+                    "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53",
+                    "",
+                    "reply",
+                ],
+                [
+                    "p",
+                    "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549",
+                ],
             ],
             "content": "Nothing was bothering me, so I felt bored",
-            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
+            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87",
         }
 
         # Create event from dictionary
         event = NostrEvent.from_dict(event_dict)
 
         # Verify basic properties
-        assert event.pubkey == "00000000827ffaa94bfea288c3dfce4422c794fbb96625b6b31e9049f729d700"
+        assert (
+            event.pubkey
+            == "00000000827ffaa94bfea288c3dfce4422c794fbb96625b6b31e9049f729d700"
+        )
         assert event.kind == NostrEventKind.TEXT_NOTE
         assert event.content == "Nothing was bothering me, so I felt bored"
         assert event.created_at == 1751119008
-        assert event.id == "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
-        assert event.sig == "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a"
+        assert (
+            event.id
+            == "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
+        )
+        assert (
+            event.sig
+            == "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a"
+        )
 
         # Verify tags
         assert len(event.tags) == 3
@@ -369,13 +392,23 @@ class TestNostrEvent:
         # Check e tags (event references)
         e_tags = event.get_tag_values("e")
         assert len(e_tags) == 2
-        assert ["de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131", "", "root"] in e_tags
-        assert ["aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53", "", "reply"] in e_tags
+        assert [
+            "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131",
+            "",
+            "root",
+        ] in e_tags
+        assert [
+            "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53",
+            "",
+            "reply",
+        ] in e_tags
 
         # Check p tags (pubkey references)
         p_tags = event.get_tag_values("p")
         assert len(p_tags) == 1
-        assert ["8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"] in p_tags
+        assert [
+            "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"
+        ] in p_tags
 
         # Verify ID calculation is correct
         calculated_id = event.calculate_id()
@@ -399,12 +432,25 @@ class TestNostrEvent:
             "sig": "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a",
             "created_at": 1751119008,
             "tags": [
-                ["e", "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131", "", "root"],
-                ["e", "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53", "", "reply"],
-                ["p", "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"]
+                [
+                    "e",
+                    "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131",
+                    "",
+                    "root",
+                ],
+                [
+                    "e",
+                    "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53",
+                    "",
+                    "reply",
+                ],
+                [
+                    "p",
+                    "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549",
+                ],
             ],
             "content": "Nothing was bothering me, so I felt bored",
-            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
+            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87",
         }
 
         event = NostrEvent.from_dict(event_dict)
@@ -423,6 +469,7 @@ class TestNostrEvent:
 
         # Verify timestamp is reasonable (not in far future or past)
         import time as time_module
+
         current_time = int(time_module.time())
         # Event should be from reasonable time range (not more than a day in future)
         assert event.created_at <= current_time + 86400
@@ -443,17 +490,35 @@ class TestNostrEvent:
             "sig": "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a",
             "created_at": 1751119008,
             "tags": [
-                ["e", "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131", "", "root"],
-                ["e", "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53", "", "reply"],
-                ["p", "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"]
+                [
+                    "e",
+                    "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131",
+                    "",
+                    "root",
+                ],
+                [
+                    "e",
+                    "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53",
+                    "",
+                    "reply",
+                ],
+                [
+                    "p",
+                    "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549",
+                ],
             ],
             "content": "Nothing was bothering me, so I felt bored",
-            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
+            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87",
         }
 
-        event = NostrEvent.from_dict(event_dict)        # Test getting first event reference (root)
+        event = NostrEvent.from_dict(
+            event_dict
+        )  # Test getting first event reference (root)
         root_event_id = event.get_first_tag_value("e", 0)
-        assert root_event_id == "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131"
+        assert (
+            root_event_id
+            == "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131"
+        )
 
         # Test getting relay URL (empty string at index 1)
         root_relay = event.get_first_tag_value("e", 1)
@@ -465,7 +530,10 @@ class TestNostrEvent:
 
         # Test getting referenced pubkey
         referenced_pubkey = event.get_first_tag_value("p", 0)
-        assert referenced_pubkey == "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"
+        assert (
+            referenced_pubkey
+            == "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"
+        )
 
         # Test getting all e tag values
         e_values = event.get_tag_values("e")
@@ -587,12 +655,25 @@ class TestNostrEvent:
             "sig": "17c2d6346c78b24b20a5b4e9fb4d1aff0543dbe5983111ad73f37db7669338ff53cdff1bce892e6da2053912d7018d759203b6c9a628a069a32c3b00755ef03a",
             "created_at": 1751119008,
             "tags": [
-                ["e", "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131", "", "root"],
-                ["e", "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53", "", "reply"],
-                ["p", "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549"]
+                [
+                    "e",
+                    "de6f26b370b7495f66d504aee2b95e80068a9bf7dbfdb9e1c3592fe031d1c131",
+                    "",
+                    "root",
+                ],
+                [
+                    "e",
+                    "aa6e1b86f1c16b97ba5d12b1e0dc01d72f423bdb4f1f5067bb7c2099e3e05d53",
+                    "",
+                    "reply",
+                ],
+                [
+                    "p",
+                    "8fb9450003a599bb1b34f03fadb9b137f6c0e5a850ba205964bee4732ccce549",
+                ],
             ],
             "content": "Nothing was bothering me, so I felt bored",
-            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87"
+            "id": "ed5d4980b94ac8de8579bdf067afb0e6c197ae1ee1ff8d649c74240435584d87",
         }
 
         event = NostrEvent.from_dict(event_dict)

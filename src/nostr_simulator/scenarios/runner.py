@@ -1,15 +1,14 @@
 """Scenario runner script for demonstrating anti-spam strategies."""
 
 import sys
-from typing import Optional
 
 from . import (
-    run_pow_scenario,
-    run_wot_scenario,
-    run_multi_strategy_scenario,
     run_attack_simulation_scenario,
+    run_multi_strategy_scenario,
+    run_pow_scenario,
+    run_strategy_comparison_scenario,
     run_user_behavior_scenario,
-    run_strategy_comparison_scenario
+    run_wot_scenario,
 )
 
 
@@ -22,7 +21,7 @@ def print_available_scenarios() -> None:
         "attack": "Attack simulation with various spam vectors",
         "users": "User behavior patterns and social interactions",
         "compare": "Detailed strategy comparison and analysis",
-        "all": "Run all scenarios"
+        "all": "Run all scenarios",
     }
 
     print("🎯 Available Scenarios:")
@@ -32,7 +31,7 @@ def print_available_scenarios() -> None:
     print()
 
 
-def run_scenario(scenario_name: Optional[str] = None) -> None:
+def run_scenario(scenario_name: str | None = None) -> None:
     """Run a specific scenario or show available scenarios."""
 
     if not scenario_name or scenario_name in ["-h", "--help", "help"]:
@@ -73,7 +72,7 @@ def run_scenario(scenario_name: Optional[str] = None) -> None:
             scenario_func()
 
             if i < len(scenarios_to_run) - 1:  # Not the last scenario
-                print("\n" + "="*60 + "\n")
+                print("\n" + "=" * 60 + "\n")
 
         print("\n✅ All scenarios completed!")
     else:

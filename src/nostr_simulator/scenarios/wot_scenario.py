@@ -1,14 +1,15 @@
 """Web of Trust anti-spam strategy scenario."""
 
 import time
-from typing import List, Dict
 
 from ..anti_spam.wot import WebOfTrustStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
 from ..protocol.keys import NostrKeyPair
 
 
-def create_contact_list_event(followees: List[str], keypair: NostrKeyPair) -> NostrEvent:
+def create_contact_list_event(
+    followees: list[str], keypair: NostrKeyPair
+) -> NostrEvent:
     """Create a contact list event with followed pubkeys."""
     tags = [NostrTag("p", [pubkey]) for pubkey in followees]
 
@@ -17,7 +18,7 @@ def create_contact_list_event(followees: List[str], keypair: NostrKeyPair) -> No
         content="",
         created_at=int(time.time()),
         pubkey=keypair.public_key,
-        tags=tags
+        tags=tags,
     )
 
 
@@ -41,7 +42,7 @@ def run_wot_scenario() -> None:
         min_trust_score=0.5,
         trust_decay_factor=0.99,
         max_trust_depth=3,
-        trust_propagation_factor=0.8
+        trust_propagation_factor=0.8,
     )
 
     # Create a network of users
@@ -77,28 +78,33 @@ def run_wot_scenario() -> None:
     wot_strategy.bootstrapped_trusted_keys.add(alice_pubkey)
     # Initialize Alice's node in the trust graph
     from ..anti_spam.wot import TrustNode
+
     wot_strategy._trust_graph[alice_pubkey] = TrustNode(alice_pubkey, 1.0)
 
     print("🔗 Building trust network...")
     current_time = time.time()
 
     # Alice follows Bob and Charlie (direct trust)
-    alice_contacts = create_contact_list_event([bob_pubkey, charlie_pubkey], alice_keypair)
+    alice_contacts = create_contact_list_event(
+        [bob_pubkey, charlie_pubkey], alice_keypair
+    )
     wot_strategy.update_state(alice_contacts, current_time)
-    print(f"  ✅ Alice follows Bob and Charlie")
+    print("  ✅ Alice follows Bob and Charlie")
 
     # Bob follows Charlie and David (Bob trusts these users)
-    bob_contacts = create_contact_list_event([charlie_pubkey, david_pubkey], bob_keypair)
+    bob_contacts = create_contact_list_event(
+        [charlie_pubkey, david_pubkey], bob_keypair
+    )
     wot_strategy.update_state(bob_contacts, current_time + 1)
-    print(f"  ✅ Bob follows Charlie and David")
+    print("  ✅ Bob follows Charlie and David")
 
     # Charlie follows David (reinforces David's trust)
     charlie_contacts = create_contact_list_event([david_pubkey], charlie_keypair)
     wot_strategy.update_state(charlie_contacts, current_time + 2)
-    print(f"  ✅ Charlie follows David")
+    print("  ✅ Charlie follows David")
 
     # Eve has no connections (isolated)
-    print(f"  ❌ Eve has no trust connections")
+    print("  ❌ Eve has no trust connections")
     print()
 
     # Show trust graph stats
@@ -123,7 +129,7 @@ def run_wot_scenario() -> None:
         bob_pubkey: "Bob (Direct Trust)",
         charlie_pubkey: "Charlie (Direct Trust)",
         david_pubkey: "David (Transitive Trust)",
-        eve_pubkey: "Eve (No Trust)"
+        eve_pubkey: "Eve (No Trust)",
     }
 
     print("📝 Testing message filtering...")
@@ -134,7 +140,7 @@ def run_wot_scenario() -> None:
         result = wot_strategy.evaluate_event(event, current_time + 10 + i)
 
         user_name = user_names[keypair.public_key]
-        trust_score = result.metrics.get('trust_score', 0.0) if result.metrics else 0.0
+        trust_score = result.metrics.get("trust_score", 0.0) if result.metrics else 0.0
 
         status_icon = "✅" if result.allowed else "❌"
         print(f"{status_icon} {user_name}")
@@ -153,7 +159,7 @@ def run_wot_scenario() -> None:
         trust_decay_factor=0.8,  # Faster decay
         max_trust_depth=3,
         trust_propagation_factor=0.8,
-        bootstrapped_trusted_keys={alice_pubkey}
+        bootstrapped_trusted_keys={alice_pubkey},
     )
 
     # Rebuild the trust network
@@ -167,11 +173,15 @@ def run_wot_scenario() -> None:
     time_intervals = [0, 1, 2, 5]  # Time units after trust establishment
 
     for interval in time_intervals:
-        result = fast_decay_wot.evaluate_event(bob_message, current_time + 10 + interval)
-        trust_score = result.metrics.get('trust_score', 0.0) if result.metrics else 0.0
+        result = fast_decay_wot.evaluate_event(
+            bob_message, current_time + 10 + interval
+        )
+        trust_score = result.metrics.get("trust_score", 0.0) if result.metrics else 0.0
         status_icon = "✅" if result.allowed else "❌"
 
-        print(f"{status_icon} Time +{interval}: Trust Score = {trust_score:.3f} ({'Allowed' if result.allowed else 'Rejected'})")
+        print(
+            f"{status_icon} Time +{interval}: Trust Score = {trust_score:.3f} ({'Allowed' if result.allowed else 'Rejected'})"
+        )
 
     print()
 
@@ -183,7 +193,11 @@ def run_wot_scenario() -> None:
     print(f"  Events rejected: {final_metrics['rejected_events']}")
     print(f"  Trust graph size: {final_metrics['trust_graph_size']}")
 
-    success_rate = (final_metrics['allowed_events'] / final_metrics['total_evaluations'] * 100) if final_metrics['total_evaluations'] > 0 else 0
+    success_rate = (
+        (final_metrics["allowed_events"] / final_metrics["total_evaluations"] * 100)
+        if final_metrics["total_evaluations"] > 0
+        else 0
+    )
     print(f"  Success rate: {success_rate:.1f}%")
     print()
 

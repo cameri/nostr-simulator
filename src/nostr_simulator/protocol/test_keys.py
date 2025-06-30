@@ -17,7 +17,7 @@ class TestNostrKeyPair:
         keypair = NostrKeyPair.generate()
 
         assert len(keypair.private_key) == 64  # 32 bytes as hex
-        assert len(keypair.public_key) == 64   # 32 bytes as hex
+        assert len(keypair.public_key) == 64  # 32 bytes as hex
 
         # Verify they are valid hex
         bytes.fromhex(keypair.private_key)

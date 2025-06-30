@@ -138,13 +138,15 @@ class TestEventValidator:
         except ValidationError as e:
             assert "must be positive" in str(e)
 
-    @patch('time.time')
+    @patch("time.time")
     def test_validate_timestamp_too_far_future(self, mock_time: Any) -> None:
         """Test validation fails for timestamp too far in future."""
         mock_time.return_value = 1000000
 
         event = self.create_valid_event()
-        event.created_at = int(mock_time.return_value) + self.validator.timestamp_tolerance_seconds + 1
+        event.created_at = (
+            int(mock_time.return_value) + self.validator.timestamp_tolerance_seconds + 1
+        )
 
         try:
             self.validator.validate_event(event, check_signature=False)
@@ -385,8 +387,11 @@ class TestRelayPolicy:
         assert self.keypair.public_key in policy._event_counts
 
         # Old entries should be removed
-        recent_count = len([
-            t for t in policy._event_counts[self.keypair.public_key]
-            if t > 1010.0  # Only entries after 1010
-        ])
+        recent_count = len(
+            [
+                t
+                for t in policy._event_counts[self.keypair.public_key]
+                if t > 1010.0  # Only entries after 1010
+            ]
+        )
         assert recent_count == 1  # Only the most recent event

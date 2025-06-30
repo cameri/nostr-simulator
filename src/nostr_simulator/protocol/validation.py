@@ -88,7 +88,7 @@ class EventValidator:
 
     def _validate_content_length(self, event: NostrEvent) -> None:
         """Validate content length."""
-        if len(event.content.encode('utf-8')) > self.max_content_length:
+        if len(event.content.encode("utf-8")) > self.max_content_length:
             raise ValidationError(
                 f"Content exceeds maximum length of {self.max_content_length} bytes"
             )
@@ -102,7 +102,7 @@ class EventValidator:
             if not tag.name:
                 raise ValidationError(f"Tag {i} has empty name")
 
-            if len(tag.name.encode('utf-8')) > self.max_tag_value_length:
+            if len(tag.name.encode("utf-8")) > self.max_tag_value_length:
                 raise ValidationError(f"Tag {i} name too long")
 
             if len(tag.values) > self.max_tag_values:
@@ -111,7 +111,7 @@ class EventValidator:
                 )
 
             for j, value in enumerate(tag.values):
-                if len(value.encode('utf-8')) > self.max_tag_value_length:
+                if len(value.encode("utf-8")) > self.max_tag_value_length:
                     raise ValidationError(f"Tag {i} value {j} too long")
 
     def _validate_timestamp(self, event: NostrEvent) -> None:
@@ -260,7 +260,10 @@ class RelayPolicy:
             return False, "Pubkey is blocked"
 
         # Check allowed kinds
-        if self.allowed_kinds is not None and event.kind.value not in self.allowed_kinds:
+        if (
+            self.allowed_kinds is not None
+            and event.kind.value not in self.allowed_kinds
+        ):
             return False, f"Event kind {event.kind.value} not allowed"
 
         # Check rate limiting
@@ -271,7 +274,10 @@ class RelayPolicy:
         if self.require_pow:
             pow_difficulty = self._calculate_pow_difficulty(event)
             if pow_difficulty < self.min_pow_difficulty:
-                return False, f"Insufficient PoW (got {pow_difficulty}, need {self.min_pow_difficulty})"
+                return (
+                    False,
+                    f"Insufficient PoW (got {pow_difficulty}, need {self.min_pow_difficulty})",
+                )
 
         return True, "Accepted"
 
@@ -299,7 +305,7 @@ class RelayPolicy:
         # Count leading zeros in the event ID
         difficulty = 0
         for char in event.id:
-            if char == '0':
+            if char == "0":
                 difficulty += 4  # Each hex digit is 4 bits
             else:
                 # Count leading zeros in the binary representation of this hex digit

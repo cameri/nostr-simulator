@@ -1,14 +1,13 @@
 """Tests for hashchain and rolling codes anti-spam strategies."""
 
 import time
-from unittest.mock import patch
 
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
 from .hashchain import (
     HashchainRollingCodes,
-    TimeBasedCodeRotation,
     HashchainState,
     RollingCode,
+    TimeBasedCodeRotation,
 )
 
 
@@ -198,9 +197,7 @@ class TestHashchainRollingCodes:
 
     def test_clock_skew_tolerance(self) -> None:
         """Test that the strategy tolerates some clock skew."""
-        strategy = HashchainRollingCodes(
-            rotation_interval=60.0, max_future_codes=2
-        )
+        strategy = HashchainRollingCodes(rotation_interval=60.0, max_future_codes=2)
         pubkey = "test_user"
         base_time = 1000.0
 
@@ -413,7 +410,9 @@ class TestTimeBasedCodeRotation:
         # Since sets don't preserve order, we can't guarantee exact count,
         # but it should be significantly less than 150
         assert len(strategy._used_codes[pubkey]) < 150
-        assert len(strategy._used_codes[pubkey]) <= 100  # Should not exceed cleanup threshold
+        assert (
+            len(strategy._used_codes[pubkey]) <= 100
+        )  # Should not exceed cleanup threshold
 
     def test_metrics(self) -> None:
         """Test strategy metrics."""

@@ -1,7 +1,6 @@
 """Proof of Work anti-spam strategy scenario."""
 
 import time
-from typing import List
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -20,7 +19,9 @@ def create_sample_event(content: str, keypair: NostrKeyPair) -> NostrEvent:
 
 def add_proof_of_work(event: NostrEvent, difficulty: int) -> bool:
     """Add proof of work to an event by finding a valid nonce."""
-    print(f"🔨 Mining PoW for event: '{event.content[:50]}...' (difficulty: {difficulty})")
+    print(
+        f"🔨 Mining PoW for event: '{event.content[:50]}...' (difficulty: {difficulty})"
+    )
 
     start_time = time.time()
     nonce = 0
@@ -33,7 +34,8 @@ def add_proof_of_work(event: NostrEvent, difficulty: int) -> bool:
             content=event.content,
             created_at=event.created_at,
             pubkey=event.pubkey,
-            tags=event.tags + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])]
+            tags=event.tags
+            + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])],
         )
 
         # Calculate leading zeros in event ID
@@ -43,7 +45,7 @@ def add_proof_of_work(event: NostrEvent, difficulty: int) -> bool:
             if byte == 0:
                 leading_zeros += 8
             else:
-                leading_zeros += (8 - byte.bit_length())
+                leading_zeros += 8 - byte.bit_length()
                 break
 
         if leading_zeros >= difficulty:
@@ -51,7 +53,9 @@ def add_proof_of_work(event: NostrEvent, difficulty: int) -> bool:
             event.tags = temp_event.tags
             event.id = temp_event.id
             end_time = time.time()
-            print(f"✅ PoW found! Nonce: {nonce}, Time: {end_time - start_time:.2f}s, Leading zeros: {leading_zeros}")
+            print(
+                f"✅ PoW found! Nonce: {nonce}, Time: {end_time - start_time:.2f}s, Leading zeros: {leading_zeros}"
+            )
             return True
 
         nonce += 1
@@ -67,7 +71,9 @@ def run_pow_scenario() -> None:
 
     # Create PoW strategy with different difficulty levels
     easy_pow = ProofOfWorkStrategy(min_difficulty=4, max_difficulty=20, adaptive=False)
-    medium_pow = ProofOfWorkStrategy(min_difficulty=8, max_difficulty=20, adaptive=False)
+    medium_pow = ProofOfWorkStrategy(
+        min_difficulty=8, max_difficulty=20, adaptive=False
+    )
     hard_pow = ProofOfWorkStrategy(min_difficulty=12, max_difficulty=20, adaptive=False)
 
     # Create keypair for events
@@ -79,17 +85,19 @@ def run_pow_scenario() -> None:
         "Spam message #1 - Buy crypto now!",
         "Spam message #2 - Click this link!",
         "Legitimate message about decentralized protocols.",
-        "Another spam attempt - Get rich quick!"
+        "Another spam attempt - Get rich quick!",
     ]
 
     print(f"👤 Using public key: {keypair.public_key[:16]}...")
     print()
 
-    for i, (content, strategy, strategy_name) in enumerate([
-        (test_events[0], easy_pow, "Easy PoW (4 bits)"),
-        (test_events[1], medium_pow, "Medium PoW (8 bits)"),
-        (test_events[2], hard_pow, "Hard PoW (12 bits)")
-    ]):
+    for i, (content, strategy, strategy_name) in enumerate(
+        [
+            (test_events[0], easy_pow, "Easy PoW (4 bits)"),
+            (test_events[1], medium_pow, "Medium PoW (8 bits)"),
+            (test_events[2], hard_pow, "Hard PoW (12 bits)"),
+        ]
+    ):
         print(f"📝 Test {i+1}: {strategy_name}")
         print(f"   Message: '{content}'")
 
@@ -98,12 +106,16 @@ def run_pow_scenario() -> None:
 
         # Test without PoW first
         result = strategy.evaluate_event(event, time.time())
-        print(f"   Without PoW: {'✅ ALLOWED' if result.allowed else '❌ BLOCKED'} - {result.reason}")
+        print(
+            f"   Without PoW: {'✅ ALLOWED' if result.allowed else '❌ BLOCKED'} - {result.reason}"
+        )
 
         # Add PoW and test again
         if add_proof_of_work(event, strategy.current_difficulty):
             result = strategy.evaluate_event(event, time.time())
-            print(f"   With PoW: {'✅ ALLOWED' if result.allowed else '❌ BLOCKED'} - {result.reason}")
+            print(
+                f"   With PoW: {'✅ ALLOWED' if result.allowed else '❌ BLOCKED'} - {result.reason}"
+            )
             strategy.update_state(event, time.time())
 
         print(f"   Strategy metrics: {strategy.get_metrics()}")
@@ -111,10 +123,7 @@ def run_pow_scenario() -> None:
 
     print("🔄 Testing adaptive difficulty adjustment...")
     adaptive_pow = ProofOfWorkStrategy(
-        min_difficulty=4,
-        max_difficulty=16,
-        target_solve_time=2.0,
-        adaptive=True
+        min_difficulty=4, max_difficulty=16, target_solve_time=2.0, adaptive=True
     )
 
     # Simulate multiple events to trigger difficulty adjustment

@@ -18,7 +18,7 @@ class NostrKeyPair:
     """Represents a Nostr key pair."""
 
     private_key: str  # 32-byte hex string
-    public_key: str   # 32-byte hex string (secp256k1 public key)
+    public_key: str  # 32-byte hex string (secp256k1 public key)
 
     @classmethod
     def generate(cls) -> NostrKeyPair:
@@ -47,7 +47,7 @@ class NostrKeyPair:
         # For simulation, create a deterministic signature based on private key + data
         # This is NOT cryptographically secure, but sufficient for simulation
         signature_input = self.private_key + event_data
-        signature_bytes = hashlib.sha256(signature_input.encode('utf-8')).digest()
+        signature_bytes = hashlib.sha256(signature_input.encode("utf-8")).digest()
         return signature_bytes.hex()
 
     def get_npub(self) -> str:
@@ -101,7 +101,9 @@ def verify_signature(public_key: str, event_data: str, signature: str) -> bool:
         True if signature is valid, False otherwise.
     """
     # Basic format checks
-    if len(signature) != 64 and len(signature) != 128:  # Support both simulation (32 bytes) and real (64 bytes) as hex
+    if (
+        len(signature) != 64 and len(signature) != 128
+    ):  # Support both simulation (32 bytes) and real (64 bytes) as hex
         return False
 
     try:
@@ -157,7 +159,7 @@ def sign_event_dict(private_key: str, event_dict: dict[str, Any]) -> str:
 
     # Create signature using our simplified method
     signature_input = private_key + json_str
-    signature_bytes = hashlib.sha256(signature_input.encode('utf-8')).digest()
+    signature_bytes = hashlib.sha256(signature_input.encode("utf-8")).digest()
     return signature_bytes.hex()
 
 

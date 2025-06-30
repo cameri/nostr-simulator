@@ -1,7 +1,6 @@
 """User agent behavior demonstration scenario."""
 
 from ..agents.user import HonestUserAgent, UserBehaviorPattern
-from ..protocol.keys import NostrKeyPair
 
 
 def run_user_behavior_scenario() -> None:
@@ -12,23 +11,23 @@ def run_user_behavior_scenario() -> None:
     # Create different behavior patterns
     social_butterfly = UserBehaviorPattern(
         posting_frequency=5.0,  # 5 posts per hour
-        follow_ratio=0.3,       # Follows 30% of discovered users
-        social_activity=0.9,    # Very social
-        online_duration=3.0     # Online 3 hours per session
+        follow_ratio=0.3,  # Follows 30% of discovered users
+        social_activity=0.9,  # Very social
+        online_duration=3.0,  # Online 3 hours per session
     )
 
     lurker = UserBehaviorPattern(
         posting_frequency=0.5,  # 0.5 posts per hour
-        follow_ratio=0.05,      # Follows 5% of discovered users
-        social_activity=0.2,    # Not very social
-        online_duration=1.0     # Online 1 hour per session
+        follow_ratio=0.05,  # Follows 5% of discovered users
+        social_activity=0.2,  # Not very social
+        online_duration=1.0,  # Online 1 hour per session
     )
 
     normal_user = UserBehaviorPattern(
         posting_frequency=2.0,  # 2 posts per hour
-        follow_ratio=0.15,      # Follows 15% of discovered users
-        social_activity=0.6,    # Moderately social
-        online_duration=2.0     # Online 2 hours per session
+        follow_ratio=0.15,  # Follows 15% of discovered users
+        social_activity=0.6,  # Moderately social
+        online_duration=2.0,  # Online 2 hours per session
     )
 
     # Create users with different behavior patterns
@@ -41,7 +40,7 @@ def run_user_behavior_scenario() -> None:
     users = [
         ("Alice", alice, "Social Butterfly"),
         ("Bob", bob, "Lurker"),
-        ("Charlie", charlie, "Normal User")
+        ("Charlie", charlie, "Normal User"),
     ]
 
     for name, user, pattern_type in users:
@@ -102,11 +101,13 @@ def run_user_behavior_scenario() -> None:
                 follows_made += 1
 
         expected_follows = len(users_to_discover) * user.behavior_pattern.follow_ratio
-        print(f"   {name}: Would follow {follows_made}/{len(users_to_discover)} users "
-              f"(expected ~{expected_follows:.1f})")
+        print(
+            f"   {name}: Would follow {follows_made}/{len(users_to_discover)} users "
+            f"(expected ~{expected_follows:.1f})"
+        )
 
     # Show social graph
-    print(f"\n🌐 Social Graph:")
+    print("\n🌐 Social Graph:")
     print(f"   Alice following: {len(alice.following)} users")
     print(f"   Alice followers: {len(alice.followers)} users")
     print(f"   Bob followers: {len(bob.followers)} users")
@@ -136,8 +137,10 @@ def run_user_behavior_scenario() -> None:
         follow_rate = follows / trials
         expected_rate = user.behavior_pattern.follow_ratio
 
-        print(f"   {name}: {follows}/{trials} follows ({follow_rate:.1%}) "
-              f"- Expected: {expected_rate:.1%}")
+        print(
+            f"   {name}: {follows}/{trials} follows ({follow_rate:.1%}) "
+            f"- Expected: {expected_rate:.1%}"
+        )
 
     print("\n✅ User behavior scenario completed!")
     print("\nKey Insights:")

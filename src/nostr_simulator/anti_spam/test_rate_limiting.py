@@ -5,12 +5,12 @@ from unittest.mock import Mock
 
 from ..protocol.events import NostrEvent, NostrEventKind
 from .rate_limiting import (
-    TokenBucketRateLimiting,
-    SlidingWindowRateLimiting,
     AdaptiveRateLimiting,
     PerKeyRateLimiting,
-    TrustedUserBypassRateLimiting,
+    SlidingWindowRateLimiting,
     TokenBucket,
+    TokenBucketRateLimiting,
+    TrustedUserBypassRateLimiting,
 )
 
 
@@ -332,7 +332,9 @@ class TestAdaptiveRateLimiting:
 
         # Hit the limit multiple times
         for _ in range(10):
-            strategy.evaluate_event(event, 0.0)  # This will hit limit and increase spam indicators
+            strategy.evaluate_event(
+                event, 0.0
+            )  # This will hit limit and increase spam indicators
 
         # Trigger adaptation
         strategy.evaluate_event(event, 15.0)

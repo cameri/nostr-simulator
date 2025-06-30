@@ -11,7 +11,7 @@ from ..logging_config import get_logger
 from .events import Event
 
 if TYPE_CHECKING:
-    from .engine import SimulationEngine
+    pass
 
 
 class EngineProtocol(Protocol):

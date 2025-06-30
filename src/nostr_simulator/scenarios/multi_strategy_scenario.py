@@ -1,7 +1,7 @@
 """Multi-strategy anti-spam scenario demonstrating various defense mechanisms."""
 
 import time
-from typing import Dict, List, Tuple, Any
+from typing import Any
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -9,7 +9,9 @@ from ..protocol.keys import NostrKeyPair
 from ..protocol.validation import RelayPolicy
 
 
-def create_sample_event(content: str, keypair: NostrKeyPair, kind: NostrEventKind = NostrEventKind.TEXT_NOTE) -> NostrEvent:
+def create_sample_event(
+    content: str, keypair: NostrKeyPair, kind: NostrEventKind = NostrEventKind.TEXT_NOTE
+) -> NostrEvent:
     """Create a sample Nostr event."""
     return NostrEvent(
         kind=kind,
@@ -19,7 +21,9 @@ def create_sample_event(content: str, keypair: NostrKeyPair, kind: NostrEventKin
     )
 
 
-def add_pow_to_event(event: NostrEvent, difficulty: int, max_attempts: int = 10000) -> bool:
+def add_pow_to_event(
+    event: NostrEvent, difficulty: int, max_attempts: int = 10000
+) -> bool:
     """Add proof of work to an event by finding a valid nonce."""
     nonce = 0
 
@@ -30,7 +34,8 @@ def add_pow_to_event(event: NostrEvent, difficulty: int, max_attempts: int = 100
             content=event.content,
             created_at=event.created_at,
             pubkey=event.pubkey,
-            tags=event.tags + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])]
+            tags=event.tags
+            + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])],
         )
 
         # Calculate leading zeros in event ID
@@ -40,7 +45,7 @@ def add_pow_to_event(event: NostrEvent, difficulty: int, max_attempts: int = 100
             if byte == 0:
                 leading_zeros += 8
             else:
-                leading_zeros += (8 - byte.bit_length())
+                leading_zeros += 8 - byte.bit_length()
                 break
 
         if leading_zeros >= difficulty:
@@ -57,9 +62,9 @@ def add_pow_to_event(event: NostrEvent, difficulty: int, max_attempts: int = 100
 def simulate_user_behavior(
     user_type: str,
     keypair: NostrKeyPair,
-    strategies: Dict[str, Any],
-    current_time: float
-) -> List[Tuple[NostrEvent, Dict[str, bool]]]:
+    strategies: dict[str, Any],
+    current_time: float,
+) -> list[tuple[NostrEvent, dict[str, bool]]]:
     """Simulate different user behavior patterns."""
 
     results = []
@@ -131,12 +136,16 @@ def simulate_user_behavior(
         sybil_keypairs = [NostrKeyPair.generate() for _ in range(5)]
 
         for i, sybil_keypair in enumerate(sybil_keypairs):
-            content = f"Identity #{i+1}: This looks like a normal message but I'm a sybil!"
+            content = (
+                f"Identity #{i+1}: This looks like a normal message but I'm a sybil!"
+            )
             event = create_sample_event(content, sybil_keypair)
 
             # Sybil attackers might do minimal PoW
             if "pow" in strategies:
-                add_pow_to_event(event, max(1, strategies["pow"].current_difficulty - 2))
+                add_pow_to_event(
+                    event, max(1, strategies["pow"].current_difficulty - 2)
+                )
 
             strategy_results = {}
             for name, strategy in strategies.items():
@@ -163,7 +172,7 @@ def run_multi_strategy_scenario() -> None:
     # Initialize strategies
     strategies = {
         "pow": ProofOfWorkStrategy(min_difficulty=6, max_difficulty=20, adaptive=True),
-        "rate_limit": RelayPolicy(max_events_per_minute=10)
+        "rate_limit": RelayPolicy(max_events_per_minute=10),
     }
 
     print("🛡️  Initialized Anti-Spam Strategies:")
@@ -177,17 +186,17 @@ def run_multi_strategy_scenario() -> None:
     current_time = time.time()
 
     # Track overall statistics
-    total_stats: Dict[str, Dict[str, Any]] = {
+    total_stats: dict[str, dict[str, Any]] = {
         "honest": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}},
         "spammer": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}},
-        "sybil": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}}
+        "sybil": {"total": 0, "blocked": {"pow": 0, "rate_limit": 0}},
     }
 
     # Simulate different user types
     for user_type, keypair in [
         ("honest", honest_user),
         ("spammer", spammer),
-        ("sybil", spammer)  # Sybil uses different keypairs internally
+        ("sybil", spammer),  # Sybil uses different keypairs internally
     ]:
         print(f"👤 Simulating {user_type.upper()} user behavior:")
         print(f"   Public key: {keypair.public_key[:16]}...")
@@ -199,9 +208,15 @@ def run_multi_strategy_scenario() -> None:
             total_stats[user_type]["total"] += 1
 
             allowed_by_all = all(strategy_results.values())
-            blocked_by = [name for name, allowed in strategy_results.items() if not allowed]
+            blocked_by = [
+                name for name, allowed in strategy_results.items() if not allowed
+            ]
 
-            status = "✅ ALLOWED" if allowed_by_all else f"❌ BLOCKED by {', '.join(blocked_by)}"
+            status = (
+                "✅ ALLOWED"
+                if allowed_by_all
+                else f"❌ BLOCKED by {', '.join(blocked_by)}"
+            )
             print(f"   📝 '{event.content[:40]}...' → {status}")
 
             # Update blocking stats
@@ -221,19 +236,23 @@ def run_multi_strategy_scenario() -> None:
 
             for strategy_name, blocked_count in stats["blocked"].items():
                 block_rate = (blocked_count / stats["total"]) * 100
-                print(f"  Blocked by {strategy_name}: {blocked_count}/{stats['total']} ({block_rate:.1f}%)")
+                print(
+                    f"  Blocked by {strategy_name}: {blocked_count}/{stats['total']} ({block_rate:.1f}%)"
+                )
             print()
 
     # Strategy-specific metrics
     print("🔧 Strategy Metrics:")
     for name, strategy in strategies.items():
-        if hasattr(strategy, 'get_metrics'):
+        if hasattr(strategy, "get_metrics"):
             metrics = strategy.get_metrics()
             print(f"{name.upper()}: {metrics}")
 
     print()
     print("📝 Scenario Insights:")
-    print("• Honest users typically pass all filters (willing to do PoW, reasonable rate)")
+    print(
+        "• Honest users typically pass all filters (willing to do PoW, reasonable rate)"
+    )
     print("• Spammers are blocked by PoW requirements and rate limiting")
     print("• Sybil attackers may bypass rate limits but struggle with PoW costs")
     print("• Multiple strategies provide defense in depth")

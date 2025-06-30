@@ -5,7 +5,6 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from ..logging_config import get_logger
 from ..protocol.events import NostrEvent
 from ..simulation.events import Event
 from .base import AgentType, BaseAgent

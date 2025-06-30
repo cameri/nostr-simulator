@@ -1,7 +1,7 @@
 """Tests for simulation engine."""
 
 import time
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -14,7 +14,7 @@ class TestEventHandler(EventHandler):
     """Test event handler for testing purposes."""
 
     def __init__(self) -> None:
-        self.handled_events = []
+        self.handled_events: list[Event] = []
         self.can_handle_types = {"test_event"}
 
     def handle_event(self, event: Event) -> list[Event]:
@@ -141,7 +141,7 @@ class TestSimulationEngine:
         engine = SimulationEngine(config)
 
         # Start simulation in background and stop it
-        def stop_after_delay():
+        def stop_after_delay() -> None:
             time.sleep(0.1)  # Short delay
             engine.stop()
 
@@ -190,7 +190,7 @@ class TestSimulationEngine:
         assert engine.event_count == 0
 
     @patch("time.time")
-    def test_performance_metrics(self, mock_time) -> None:
+    def test_performance_metrics(self, mock_time: MagicMock) -> None:
         """Test that performance metrics are calculated correctly."""
         # Mock wall clock time
         mock_time.side_effect = [0.0, 1.0]  # 1 second wall time

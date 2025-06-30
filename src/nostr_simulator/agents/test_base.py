@@ -11,13 +11,13 @@ from .base import AgentManager, AgentState, AgentType, BaseAgent, Message
 class TestAgent(BaseAgent):
     """Test agent implementation for testing."""
 
-    def __init__(self, agent_id: str, simulation_engine=None) -> None:
+    def __init__(self, agent_id: str, simulation_engine: object = None) -> None:
         super().__init__(agent_id, AgentType.HONEST_USER, simulation_engine)
         self.handled_event_types = {"test_event", "message_delivery"}
         self.activation_called = False
         self.deactivation_called = False
-        self.messages_received = []
-        self.events_handled = []
+        self.messages_received: list[Message] = []
+        self.events_handled: list[Event] = []
 
     def on_activate(self, current_time: float) -> None:
         """Track activation."""
@@ -100,7 +100,9 @@ class TestBaseAgent:
 
         # Test going offline
         agent.go_offline(current_time + 5)
-        assert agent.state == AgentState.OFFLINE
+        # Explicitly check the state to avoid mypy type narrowing issues
+        offline_state = agent.state
+        assert offline_state == AgentState.OFFLINE  # type: ignore[comparison-overlap]
         assert not agent.is_online()
         assert agent.is_offline()
 

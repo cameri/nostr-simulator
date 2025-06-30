@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
+from ..protocol.events import NostrEvent, NostrEventKind
 from ..simulation.events import Event
 from .base import AgentState, AgentType
 from .client import ClientAgent

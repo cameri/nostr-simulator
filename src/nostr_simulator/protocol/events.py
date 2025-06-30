@@ -92,6 +92,7 @@ class NostrEvent:
         Ordered list of NostrTag instances for categorization, threading,
         references, routing, or other metadata extensions.
     """
+
     """Represents a Nostr event."""
 
     kind: NostrEventKind
@@ -251,7 +252,9 @@ class NostrEvent:
         if not self.sig:
             return False
 
-        if len(self.sig) != 64 and len(self.sig) != 128:  # Support both simulation (32 bytes) and real (64 bytes) as hex
+        if (
+            len(self.sig) != 64 and len(self.sig) != 128
+        ):  # Support both simulation (32 bytes) and real (64 bytes) as hex
             return False
 
         try:

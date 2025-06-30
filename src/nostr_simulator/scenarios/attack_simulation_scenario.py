@@ -2,7 +2,7 @@
 
 import random
 import time
-from typing import Dict, List, Tuple, Any
+from typing import Any
 
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
@@ -10,13 +10,15 @@ from ..protocol.keys import NostrKeyPair
 from ..protocol.validation import RelayPolicy
 
 
-def simulate_sybil_attack(num_identities: int = 10) -> List[NostrKeyPair]:
+def simulate_sybil_attack(num_identities: int = 10) -> list[NostrKeyPair]:
     """Simulate a Sybil attack with multiple fake identities."""
     print(f"🎭 Generating {num_identities} Sybil identities...")
     return [NostrKeyPair.generate() for _ in range(num_identities)]
 
 
-def simulate_burst_spam(keypair: NostrKeyPair, burst_size: int = 20) -> List[NostrEvent]:
+def simulate_burst_spam(
+    keypair: NostrKeyPair, burst_size: int = 20
+) -> list[NostrEvent]:
     """Simulate burst spam attack - many messages in quick succession."""
     print(f"💥 Generating burst spam: {burst_size} messages")
 
@@ -25,7 +27,7 @@ def simulate_burst_spam(keypair: NostrKeyPair, burst_size: int = 20) -> List[Nos
         "💰 You've won ${}! Claim your prize instantly!",
         "🔥 Hot investment opportunity! {} returns guaranteed!",
         "⚡ BREAKING: New crypto coin will 100x! Buy {} now!",
-        "🎁 Free money alert! Get ${} in 5 minutes!"
+        "🎁 Free money alert! Get ${} in 5 minutes!",
     ]
 
     events = []
@@ -46,7 +48,7 @@ def simulate_burst_spam(keypair: NostrKeyPair, burst_size: int = 20) -> List[Nos
     return events
 
 
-def simulate_hash_link_spam(keypair: NostrKeyPair) -> List[NostrEvent]:
+def simulate_hash_link_spam(keypair: NostrKeyPair) -> list[NostrEvent]:
     """Simulate hash-link spam - obfuscated malicious links."""
     print("🔗 Generating hash-link spam with obfuscated URLs")
 
@@ -56,7 +58,7 @@ def simulate_hash_link_spam(keypair: NostrKeyPair) -> List[NostrEvent]:
         "Check this out: tinyurl.com/crypto2024 💰",
         "Limited time: rb.gy/invest-now (expires in 1h)",
         "BREAKING: shorturl.at/wxyz123 🚀",
-        "Free money here: is.gd/freecrypto 🎁"
+        "Free money here: is.gd/freecrypto 🎁",
     ]
 
     events = []
@@ -74,7 +76,9 @@ def simulate_hash_link_spam(keypair: NostrKeyPair) -> List[NostrEvent]:
     return events
 
 
-def simulate_replay_attack(original_events: List[NostrEvent], attacker_keypair: NostrKeyPair) -> List[NostrEvent]:
+def simulate_replay_attack(
+    original_events: list[NostrEvent], attacker_keypair: NostrKeyPair
+) -> list[NostrEvent]:
     """Simulate replay attack - reposting old content with new signatures."""
     print("🔄 Generating replay attack - reusing content from legitimate users")
 
@@ -104,7 +108,8 @@ def add_minimal_pow(event: NostrEvent, difficulty: int = 2) -> bool:
             content=event.content,
             created_at=event.created_at,
             pubkey=event.pubkey,
-            tags=event.tags + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])]
+            tags=event.tags
+            + [NostrTag(name="nonce", values=[str(nonce), str(difficulty)])],
         )
 
         event_id_bytes = bytes.fromhex(temp_event.id)
@@ -113,7 +118,7 @@ def add_minimal_pow(event: NostrEvent, difficulty: int = 2) -> bool:
             if byte == 0:
                 leading_zeros += 8
             else:
-                leading_zeros += (8 - byte.bit_length())
+                leading_zeros += 8 - byte.bit_length()
                 break
 
         if leading_zeros >= difficulty:
@@ -125,14 +130,19 @@ def add_minimal_pow(event: NostrEvent, difficulty: int = 2) -> bool:
 
 
 def test_events_against_strategies(
-    events: List[NostrEvent],
-    strategies: Dict[str, Any],
+    events: list[NostrEvent],
+    strategies: dict[str, Any],
     current_time: float,
-    event_source: str
-) -> Dict[str, int]:
+    event_source: str,
+) -> dict[str, int]:
     """Test a list of events against all strategies and return blocking stats."""
 
-    stats = {"total": len(events), "blocked_by_pow": 0, "blocked_by_rate": 0, "allowed": 0}
+    stats = {
+        "total": len(events),
+        "blocked_by_pow": 0,
+        "blocked_by_rate": 0,
+        "allowed": 0,
+    }
 
     for event in events:
         # Add minimal PoW for attackers
@@ -172,7 +182,7 @@ def run_attack_simulation_scenario() -> None:
     # Initialize defensive strategies
     strategies = {
         "pow": ProofOfWorkStrategy(min_difficulty=8, max_difficulty=20, adaptive=False),
-        "rate_limit": RelayPolicy(max_events_per_minute=5)  # Strict rate limiting
+        "rate_limit": RelayPolicy(max_events_per_minute=5),  # Strict rate limiting
     }
 
     print("🛡️  Defensive Strategies:")
@@ -194,7 +204,7 @@ def run_attack_simulation_scenario() -> None:
             content="Just finished reading about decentralized networks. Fascinating stuff!",
             created_at=int(time.time()) + 300,
             pubkey=honest_user.public_key,
-        )
+        ),
     ]
 
     current_time = time.time()
@@ -216,9 +226,15 @@ def run_attack_simulation_scenario() -> None:
         )
         sybil_events.append(event)
 
-    sybil_stats = test_events_against_strategies(sybil_events, strategies, current_time, "Sybil")
-    print(f"   📈 {sybil_stats['blocked_by_pow']}/{sybil_stats['total']} blocked by PoW")
-    print(f"   ⏱️  {sybil_stats['blocked_by_rate']}/{sybil_stats['total']} blocked by rate limit")
+    sybil_stats = test_events_against_strategies(
+        sybil_events, strategies, current_time, "Sybil"
+    )
+    print(
+        f"   📈 {sybil_stats['blocked_by_pow']}/{sybil_stats['total']} blocked by PoW"
+    )
+    print(
+        f"   ⏱️  {sybil_stats['blocked_by_rate']}/{sybil_stats['total']} blocked by rate limit"
+    )
     print(f"   ✅ {sybil_stats['allowed']}/{sybil_stats['total']} messages allowed")
     print()
 
@@ -227,9 +243,15 @@ def run_attack_simulation_scenario() -> None:
     spammer = NostrKeyPair.generate()
     burst_events = simulate_burst_spam(spammer, 15)
 
-    burst_stats = test_events_against_strategies(burst_events, strategies, current_time + 100, "Burst")
-    print(f"   📈 {burst_stats['blocked_by_pow']}/{burst_stats['total']} blocked by PoW")
-    print(f"   ⏱️  {burst_stats['blocked_by_rate']}/{burst_stats['total']} blocked by rate limit")
+    burst_stats = test_events_against_strategies(
+        burst_events, strategies, current_time + 100, "Burst"
+    )
+    print(
+        f"   📈 {burst_stats['blocked_by_pow']}/{burst_stats['total']} blocked by PoW"
+    )
+    print(
+        f"   ⏱️  {burst_stats['blocked_by_rate']}/{burst_stats['total']} blocked by rate limit"
+    )
     print(f"   ✅ {burst_stats['allowed']}/{burst_stats['total']} messages allowed")
     print()
 
@@ -238,9 +260,13 @@ def run_attack_simulation_scenario() -> None:
     link_spammer = NostrKeyPair.generate()
     link_events = simulate_hash_link_spam(link_spammer)
 
-    link_stats = test_events_against_strategies(link_events, strategies, current_time + 200, "Link")
+    link_stats = test_events_against_strategies(
+        link_events, strategies, current_time + 200, "Link"
+    )
     print(f"   📈 {link_stats['blocked_by_pow']}/{link_stats['total']} blocked by PoW")
-    print(f"   ⏱️  {link_stats['blocked_by_rate']}/{link_stats['total']} blocked by rate limit")
+    print(
+        f"   ⏱️  {link_stats['blocked_by_rate']}/{link_stats['total']} blocked by rate limit"
+    )
     print(f"   ✅ {link_stats['allowed']}/{link_stats['total']} messages allowed")
     print()
 
@@ -249,27 +275,55 @@ def run_attack_simulation_scenario() -> None:
     replay_attacker = NostrKeyPair.generate()
     replay_events = simulate_replay_attack(honest_events, replay_attacker)
 
-    replay_stats = test_events_against_strategies(replay_events, strategies, current_time + 300, "Replay")
-    print(f"   📈 {replay_stats['blocked_by_pow']}/{replay_stats['total']} blocked by PoW")
-    print(f"   ⏱️  {replay_stats['blocked_by_rate']}/{replay_stats['total']} blocked by rate limit")
+    replay_stats = test_events_against_strategies(
+        replay_events, strategies, current_time + 300, "Replay"
+    )
+    print(
+        f"   📈 {replay_stats['blocked_by_pow']}/{replay_stats['total']} blocked by PoW"
+    )
+    print(
+        f"   ⏱️  {replay_stats['blocked_by_rate']}/{replay_stats['total']} blocked by rate limit"
+    )
     print(f"   ✅ {replay_stats['allowed']}/{replay_stats['total']} messages allowed")
     print()
 
     # Summary statistics
-    total_attacks = (sybil_stats['total'] + burst_stats['total'] +
-                    link_stats['total'] + replay_stats['total'])
-    total_blocked_pow = (sybil_stats['blocked_by_pow'] + burst_stats['blocked_by_pow'] +
-                        link_stats['blocked_by_pow'] + replay_stats['blocked_by_pow'])
-    total_blocked_rate = (sybil_stats['blocked_by_rate'] + burst_stats['blocked_by_rate'] +
-                         link_stats['blocked_by_rate'] + replay_stats['blocked_by_rate'])
-    total_allowed = (sybil_stats['allowed'] + burst_stats['allowed'] +
-                    link_stats['allowed'] + replay_stats['allowed'])
+    total_attacks = (
+        sybil_stats["total"]
+        + burst_stats["total"]
+        + link_stats["total"]
+        + replay_stats["total"]
+    )
+    total_blocked_pow = (
+        sybil_stats["blocked_by_pow"]
+        + burst_stats["blocked_by_pow"]
+        + link_stats["blocked_by_pow"]
+        + replay_stats["blocked_by_pow"]
+    )
+    total_blocked_rate = (
+        sybil_stats["blocked_by_rate"]
+        + burst_stats["blocked_by_rate"]
+        + link_stats["blocked_by_rate"]
+        + replay_stats["blocked_by_rate"]
+    )
+    total_allowed = (
+        sybil_stats["allowed"]
+        + burst_stats["allowed"]
+        + link_stats["allowed"]
+        + replay_stats["allowed"]
+    )
 
     print("📋 Overall Attack Defense Summary:")
     print(f"   🎯 Total attack events: {total_attacks}")
-    print(f"   🛡️  Blocked by PoW: {total_blocked_pow} ({total_blocked_pow/total_attacks*100:.1f}%)")
-    print(f"   🛡️  Blocked by rate limit: {total_blocked_rate} ({total_blocked_rate/total_attacks*100:.1f}%)")
-    print(f"   ⚠️  Events that got through: {total_allowed} ({total_allowed/total_attacks*100:.1f}%)")
+    print(
+        f"   🛡️  Blocked by PoW: {total_blocked_pow} ({total_blocked_pow/total_attacks*100:.1f}%)"
+    )
+    print(
+        f"   🛡️  Blocked by rate limit: {total_blocked_rate} ({total_blocked_rate/total_attacks*100:.1f}%)"
+    )
+    print(
+        f"   ⚠️  Events that got through: {total_allowed} ({total_allowed/total_attacks*100:.1f}%)"
+    )
     print()
 
     print("🔍 Key Insights:")
