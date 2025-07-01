@@ -142,11 +142,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Hash-Link Spam
 
-- [ ] Implement obfuscated link generation
-- [ ] Create link variation strategies
-- [ ] Add domain rotation mechanisms
-- [ ] Implement evasion techniques
-- [ ] Create payload obfuscation
+- [x] Implement obfuscated link generation
+- [x] Create link variation strategies
+- [x] Add domain rotation mechanisms
+- [x] Implement evasion techniques
+- [x] Create payload obfuscation
 
 ### Replay Attacks
 
