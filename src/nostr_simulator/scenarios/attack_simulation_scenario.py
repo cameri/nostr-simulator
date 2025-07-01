@@ -4,7 +4,11 @@ import random
 import time
 from typing import Any
 
-from ..agents.adversarial.burst_spammer import BurstPattern, BurstSpammerAgent, BurstTiming
+from ..agents.adversarial.burst_spammer import (
+    BurstPattern,
+    BurstSpammerAgent,
+    BurstTiming,
+)
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
 from ..protocol.keys import NostrKeyPair
@@ -85,11 +89,15 @@ def simulate_advanced_burst_spam() -> tuple[BurstSpammerAgent, list[NostrEvent]]
 
     # Simulate multiple burst cycles
     simulation_time = current_time
-    while agent.attack_active and simulation_time < current_time + 300:  # 5 minute simulation
+    while (
+        agent.attack_active and simulation_time < current_time + 300
+    ):  # 5 minute simulation
         # Check if should start a burst
         if agent.should_start_burst(simulation_time):
             agent.start_burst(simulation_time)
-            print(f"   🚀 Starting burst {agent.current_burst} at {simulation_time:.1f}")
+            print(
+                f"   🚀 Starting burst {agent.current_burst} at {simulation_time:.1f}"
+            )
 
         # Check if should send message during burst
         if agent.should_send_message_in_burst(simulation_time):
@@ -104,7 +112,9 @@ def simulate_advanced_burst_spam() -> tuple[BurstSpammerAgent, list[NostrEvent]]
         simulation_time += 0.5  # Advance by 0.5 seconds
 
     metrics = agent.get_attack_metrics()
-    print(f"   📊 Attack completed: {metrics['total_bursts']} bursts, {metrics['total_messages']} messages")
+    print(
+        f"   📊 Attack completed: {metrics['total_bursts']} bursts, {metrics['total_messages']} messages"
+    )
 
     return agent, events
 
@@ -329,7 +339,9 @@ def run_attack_simulation_scenario() -> None:
     print(
         f"   ⏱️  {advanced_burst_stats['blocked_by_rate']}/{advanced_burst_stats['total']} blocked by rate limit"
     )
-    print(f"   ✅ {advanced_burst_stats['allowed']}/{advanced_burst_stats['total']} messages allowed")
+    print(
+        f"   ✅ {advanced_burst_stats['allowed']}/{advanced_burst_stats['total']} messages allowed"
+    )
     print()
 
     # Test 3: Hash-Link Spam

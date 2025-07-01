@@ -502,14 +502,16 @@ class TestBurstSpammerAgent:
         agent.start_burst(current_time)
 
         # Should use exact timing without jitter
-        expected_next = (current_time +
-                        pattern.timing.burst_duration +
-                        pattern.timing.burst_interval)
+        expected_next = (
+            current_time + pattern.timing.burst_duration + pattern.timing.burst_interval
+        )
 
         assert abs(agent.next_burst_time - expected_next) < 1.0  # Allow small tolerance
 
     def test_create_spam_event_exception_handling(self) -> None:
         """Test spam event creation with exception handling."""
+        from unittest.mock import patch
+
         agent = BurstSpammerAgent("test_agent")
         current_time = time.time()
 
@@ -517,23 +519,17 @@ class TestBurstSpammerAgent:
         agent.start_burst(current_time)
 
         # Mock a failure in event creation by making content generation fail
-        original_method = agent.generate_spam_content
-
-        def failing_method():
-            raise Exception("Simulated failure")
-
-        agent.generate_spam_content = failing_method
-
-        event = agent.create_spam_event(current_time)
-
-        # Should handle exception gracefully
-        assert event is None
-
-        # Restore original method
-        agent.generate_spam_content = original_method
+        with patch.object(
+            agent, "generate_spam_content", side_effect=Exception("Simulated failure")
+        ):
+            event = agent.create_spam_event(current_time)
+            # Should handle exception gracefully
+            assert event is None
 
     def test_process_event_coordination_failure(self) -> None:
         """Test event processing when coordination fails."""
+        from unittest.mock import patch
+
         pattern = BurstPattern(coordinated=True)
         agent = BurstSpammerAgent("test_agent", burst_pattern=pattern)
         agent.simulation_engine = Mock()
@@ -542,21 +538,16 @@ class TestBurstSpammerAgent:
         agent.start_attack(current_time)
 
         # Mock coordination failure
-        original_method = agent.coordinate_with_others
-        agent.coordinate_with_others = Mock(return_value=False)
+        with patch.object(agent, "coordinate_with_others", return_value=False):
+            event = Event(
+                time=current_time,
+                priority=1,
+                event_type="test_event",
+                data={},
+            )
 
-        event = Event(
-            time=current_time,
-            priority=1,
-            event_type="test_event",
-            data={},
-        )
+            original_burst = agent.current_burst
+            agent.process_event(event)
 
-        original_burst = agent.current_burst
-        agent.process_event(event)
-
-        # Should not start burst when coordination fails
-        assert agent.current_burst == original_burst
-
-        # Restore original method
-        agent.coordinate_with_others = original_method
+            # Should not start burst when coordination fails
+            assert agent.current_burst == original_burst
