@@ -150,11 +150,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Replay Attacks
 
-- [ ] Implement event replay mechanisms
-- [ ] Create replay timing strategies
-- [ ] Add replay detection evasion
-- [ ] Implement cross-relay replay
-- [ ] Create replay amplification
+- [x] Implement event replay mechanisms
+- [x] Create replay timing strategies
+- [x] Add replay detection evasion
+- [x] Implement cross-relay replay
+- [x] Create replay amplification
 
 ### Offline Abuse
 
@@ -204,15 +204,25 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Implement hard-to-read content patterns
 - [ ] Create content obfuscation strategies
 
+### Impersonator Attacks
+
+- [ ] Implement impersonator agent
+- [ ] Create kind:0 user metadata copying mechanisms
+- [ ] Add profile cloning strategies (name, about, picture)
+- [ ] Implement identity theft detection evasion
+- [ ] Create profile variation techniques
+- [ ] Add timing strategies for metadata publishing
+- [ ] Implement cross-relay impersonation coordination
+
 ## Phase 5: Evaluation and Metrics
 
 ### Core Metrics System
 
-- [ ] Implement false positive/negative tracking
-- [ ] Create relay load monitoring (CPU, bandwidth)
-- [ ] Add latency measurement system
-- [ ] Implement spam reduction calculation
-- [ ] Create resilience metrics
+- [x] Implement false positive/negative tracking
+- [x] Create relay load monitoring (CPU, bandwidth)
+- [x] Add latency measurement system
+- [x] Implement spam reduction calculation
+- [x] Create resilience metrics
 
 ### Advanced Analytics
 

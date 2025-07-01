@@ -75,6 +75,7 @@ If you have poethepoet installed globally, you can also use: `poe <task_name>`
 - `poetry run poe jj-status` - Show working copy status
 - `poetry run poe jj-log` - Show recent commit history (last 10, no pager)
 - `poetry run poe jj-diff` - Show changes in working copy (git-style format, no pager)
+- `poetry run poe jj-show` - Show detailed information about current revision (git-style format, no pager)
 
 **Commit Operations:**
 

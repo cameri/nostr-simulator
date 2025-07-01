@@ -20,6 +20,12 @@ jj diff --git
 To see the diff for a specific revision:
 jj diff --git -r \<revision\>
 
+To see detailed information about the current revision:
+jj show
+
+To see detailed information about a specific revision in git format:
+jj show --git -r \<revision\>
+
 To update your working copy or see the status of your changes:
 jj status
 

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## \[Unreleased\]
 
+### Added (2025-01-01)
+
+- **� Core Metrics System Implementation**
+  - Implemented comprehensive Core Metrics System with false positive/negative tracking
+  - Added relay load monitoring for CPU usage and bandwidth consumption
+  - Created latency measurement system for processing, validation, and strategy execution
+  - Implemented spam reduction calculation with effectiveness metrics
+  - Added resilience metrics for offline attack detection and sybil resistance
+  - Created CoreMetricsCollector as a central interface for all metrics
+  - Integrated metrics system with enhanced simulation engine
+  - Added comprehensive test suite with 100% coverage for all metrics classes
+  - Created demo script showcasing metrics collection and reporting
+  - Fixed percentile calculation algorithms for accurate statistical reporting
+  - Updated TODO.md to mark all core metrics system tasks as completed
+
+- **�🔁 Replay Attack Implementation**
+  - Implemented comprehensive ReplayAttackerAgent with configurable attack patterns
+  - Added event collection and replay mechanisms with timing strategies
+  - Implemented cross-relay replay capabilities with amplification
+  - Added detection evasion techniques including key rotation and content modification
+  - Created comprehensive test suite with 41 test cases achieving high coverage
+  - Added replay attack scenarios and demonstration script
+  - Updated TODO.md to mark all replay attack tasks as completed
+
 ### Fixed (2025-01-25)
 
 - **Jujutsu Command Naming**: Corrected naming convention for clarity

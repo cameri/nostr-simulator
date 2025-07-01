@@ -9,6 +9,12 @@ from ..agents.adversarial.burst_spammer import (
     BurstSpammerAgent,
     BurstTiming,
 )
+from ..agents.adversarial.replay_attacker import (
+    ReplayAttackerAgent,
+    ReplayPattern,
+    ReplayStrategy,
+    ReplayTiming,
+)
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
 from ..protocol.keys import NostrKeyPair
@@ -147,11 +153,11 @@ def simulate_hash_link_spam(keypair: NostrKeyPair) -> list[NostrEvent]:
     return events
 
 
-def simulate_replay_attack(
+def simulate_simple_replay_attack(
     original_events: list[NostrEvent], attacker_keypair: NostrKeyPair
 ) -> list[NostrEvent]:
-    """Simulate replay attack - reposting old content with new signatures."""
-    print("🔄 Generating replay attack - reusing content from legitimate users")
+    """Simulate simple replay attack - reposting old content with new signatures."""
+    print("🔄 Generating simple replay attack - reusing content from legitimate users")
 
     replayed_events = []
     current_time = int(time.time())
@@ -167,6 +173,214 @@ def simulate_replay_attack(
         replayed_events.append(replay_event)
 
     return replayed_events
+
+
+def simulate_replay_attack(
+    legitimate_events: list[NostrEvent],
+) -> tuple[list[NostrEvent], list[NostrEvent]]:
+    """Simulate replay attack - replaying legitimate events with different keys.
+
+    Args:
+        legitimate_events: List of legitimate events to replay.
+
+    Returns:
+        Tuple of (original events, replayed events).
+    """
+    print("🔁 Simulating replay attack with event collection and replay")
+
+    # Configure replay attack pattern
+    timing = ReplayTiming(
+        collection_duration=60.0,  # 1 minute collection
+        replay_delay=30.0,  # 30 second delay before replay
+        replay_interval=2.0,  # 2 seconds between replays
+        replay_batch_size=3,  # 3 events per batch
+        timing_jitter=True,
+    )
+
+    strategy = ReplayStrategy(
+        target_event_kinds=[NostrEventKind.TEXT_NOTE, NostrEventKind.SET_METADATA],
+        amplification_factor=2,  # Replay each event twice
+        max_amplification=3,
+        key_rotation=True,
+        timestamp_modification=True,
+        detection_evasion=True,
+    )
+
+    pattern = ReplayPattern(
+        timing=timing,
+        strategy=strategy,
+        collection_phase=True,
+        replay_phase=True,
+    )
+
+    # Create replay attacker
+    attacker = ReplayAttackerAgent("replay_attacker_001", replay_pattern=pattern)
+
+    # Simulate attack phases
+    current_time = time.time()
+    replayed_events = []
+
+    print(f"   📊 Starting with {len(legitimate_events)} legitimate events")
+
+    # Start attack (collection phase)
+    attacker.start_attack(current_time)
+    print(f"   🎯 Collection phase started at {current_time:.1f}")
+
+    # Simulate collecting legitimate events
+    for i, event in enumerate(legitimate_events):
+        collection_time = current_time + (i * 5)  # Collect over time
+        attacker.collect_event(event, collection_time, f"relay_{i % 3}")
+
+    print(f"   📥 Collected {len(attacker.collected_events)} events")
+
+    # Transition to replay phase
+    replay_start_time = current_time + timing.collection_duration + 10
+    attacker.start_replay_phase(replay_start_time)
+    print(f"   ⏰ Replay phase started at {replay_start_time:.1f}")
+
+    # Simulate replay process
+    simulation_time = replay_start_time
+    replay_count = 0
+    max_replays = 20  # Limit simulation
+
+    while (
+        attacker.replay_active
+        and replay_count < max_replays
+        and simulation_time < replay_start_time + 300  # 5 minute limit
+    ):
+        if attacker.should_replay_now(simulation_time):
+            batch_events = attacker.perform_replay(simulation_time)
+            replayed_events.extend(batch_events)
+            replay_count += len(batch_events)
+
+            print(f"   🔄 Replayed {len(batch_events)} events at {simulation_time:.1f}")
+
+        simulation_time += 1.0  # Advance by 1 second
+
+    # Get final metrics
+    metrics = attacker.get_attack_metrics()
+    print("   📊 Attack completed:")
+    print(f"      - Events collected: {metrics['total_events_collected']}")
+    print(f"      - Events replayed: {metrics['total_events_replayed']}")
+    print(f"      - Total amplifications: {metrics['total_amplifications']}")
+    print(f"      - Active replay keys: {metrics['active_replay_keys']}")
+
+    return legitimate_events, replayed_events
+
+
+def simulate_advanced_replay_attack() -> tuple[ReplayAttackerAgent, list[NostrEvent]]:
+    """Simulate advanced replay attack with cross-relay coordination."""
+    print("🔁 Creating advanced replay attack agent")
+
+    # Configure advanced replay pattern
+    timing = ReplayTiming(
+        collection_duration=120.0,  # 2 minute collection
+        replay_delay=15.0,  # Quick replay
+        replay_interval=1.0,  # Fast replay rate
+        replay_batch_size=5,  # Larger batches
+        timing_jitter=True,
+        randomization=0.4,  # High randomization
+    )
+
+    strategy = ReplayStrategy(
+        target_event_kinds=[
+            NostrEventKind.TEXT_NOTE,
+            NostrEventKind.SET_METADATA,
+            NostrEventKind.CONTACTS,
+        ],
+        max_collected_events=500,
+        amplification_factor=3,  # Triple replay
+        max_amplification=5,
+        key_rotation=True,
+        cross_relay_replay=True,
+        content_modification=True,  # Slightly modify content
+        timestamp_modification=True,
+        detection_evasion=True,
+        relay_coordination=True,
+    )
+
+    pattern = ReplayPattern(
+        timing=timing,
+        strategy=strategy,
+        collection_phase=True,
+        replay_phase=True,
+        continuous_mode=False,
+    )
+
+    # Create advanced replay attacker
+    agent = ReplayAttackerAgent("advanced_replay_001", replay_pattern=pattern)
+
+    # Generate some legitimate events to collect and replay
+    legitimate_events = []
+    current_time = time.time()
+
+    # Create diverse legitimate events
+    for i in range(20):
+        keypair = NostrKeyPair.generate()
+
+        if i % 4 == 0:  # Metadata events
+            event = NostrEvent(
+                kind=NostrEventKind.SET_METADATA,
+                content=f'{{"name": "User{i}", "about": "Legitimate user {i}"}}',
+                created_at=int(current_time - 3600 + (i * 60)),  # Spread over an hour
+                pubkey=keypair.public_key,
+            )
+        else:  # Text events
+            event = NostrEvent(
+                kind=NostrEventKind.TEXT_NOTE,
+                content=f"This is legitimate message {i} from a real user",
+                created_at=int(current_time - 3600 + (i * 60)),
+                pubkey=keypair.public_key,
+            )
+
+        legitimate_events.append(event)
+
+    # Start the attack
+    agent.start_attack(current_time)
+
+    # Simulate event collection
+    for i, event in enumerate(legitimate_events):
+        collect_time = current_time + (i * 2)  # Collect every 2 seconds
+        agent.collect_event(event, collect_time, f"relay_{i % 5}")
+
+    # Simulate the replay process
+    events: list[NostrEvent] = []
+    simulation_time = current_time + timing.collection_duration + timing.replay_delay
+
+    # Transition to replay phase
+    agent.start_replay_phase(simulation_time)
+
+    # Run replay simulation
+    while (
+        agent.replay_active
+        and len(events) < 100  # Limit for demo
+        and simulation_time < current_time + 600  # 10 minute limit
+    ):
+        if agent.should_replay_now(simulation_time):
+            replayed_events = agent.perform_replay(simulation_time)
+            events.extend(replayed_events)
+
+            if replayed_events:
+                print(
+                    f"   🔄 Replayed {len(replayed_events)} events at {simulation_time:.1f}"
+                )
+
+        # Update agent state
+        agent.update_state(simulation_time)
+
+        # Advance simulation time
+        simulation_time += 0.5
+
+    metrics = agent.get_attack_metrics()
+    print("   📊 Advanced replay attack completed:")
+    print(f"      - Collection active: {metrics['collection_active']}")
+    print(f"      - Replay active: {metrics['replay_active']}")
+    print(f"      - Events collected: {metrics['total_events_collected']}")
+    print(f"      - Events replayed: {metrics['total_events_replayed']}")
+    print(f"      - Amplifications: {metrics['total_amplifications']}")
+    print(f"      - Detection events: {metrics['detection_events']}")
+
+    return agent, events
 
 
 def add_minimal_pow(event: NostrEvent, difficulty: int = 2) -> bool:
@@ -362,7 +576,7 @@ def run_attack_simulation_scenario() -> None:
     # Test 4: Replay Attack
     print("4️⃣  Replay Attack:")
     replay_attacker = NostrKeyPair.generate()
-    replay_events = simulate_replay_attack(honest_events, replay_attacker)
+    replay_events = simulate_simple_replay_attack(honest_events, replay_attacker)
 
     replay_stats = test_events_against_strategies(
         replay_events, strategies, current_time + 300, "Replay"
@@ -376,30 +590,52 @@ def run_attack_simulation_scenario() -> None:
     print(f"   ✅ {replay_stats['allowed']}/{replay_stats['total']} messages allowed")
     print()
 
+    # Test 5: Advanced Replay Attack
+    print("5️⃣  Advanced Replay Attack:")
+    advanced_replay_agent, advanced_replay_events = simulate_advanced_replay_attack()
+
+    advanced_replay_stats = test_events_against_strategies(
+        advanced_replay_events, strategies, current_time + 400, "Advanced Replay"
+    )
+    print(
+        f"   📈 {advanced_replay_stats['blocked_by_pow']}/{advanced_replay_stats['total']} blocked by PoW"
+    )
+    print(
+        f"   ⏱️  {advanced_replay_stats['blocked_by_rate']}/{advanced_replay_stats['total']} blocked by rate limit"
+    )
+    print(
+        f"   ✅ {advanced_replay_stats['allowed']}/{advanced_replay_stats['total']} messages allowed"
+    )
+    print()
+
     # Summary statistics
     total_attacks = (
         sybil_stats["total"]
         + burst_stats["total"]
         + link_stats["total"]
         + replay_stats["total"]
+        + advanced_replay_stats["total"]
     )
     total_blocked_pow = (
         sybil_stats["blocked_by_pow"]
         + burst_stats["blocked_by_pow"]
         + link_stats["blocked_by_pow"]
         + replay_stats["blocked_by_pow"]
+        + advanced_replay_stats["blocked_by_pow"]
     )
     total_blocked_rate = (
         sybil_stats["blocked_by_rate"]
         + burst_stats["blocked_by_rate"]
         + link_stats["blocked_by_rate"]
         + replay_stats["blocked_by_rate"]
+        + advanced_replay_stats["blocked_by_rate"]
     )
     total_allowed = (
         sybil_stats["allowed"]
         + burst_stats["allowed"]
         + link_stats["allowed"]
         + replay_stats["allowed"]
+        + advanced_replay_stats["allowed"]
     )
 
     print("📋 Overall Attack Defense Summary:")

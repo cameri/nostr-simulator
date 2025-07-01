@@ -428,12 +428,12 @@ class TestEventAgeStrategy:
         age_proof = strategy.generate_age_proof(pubkey, timestamp, key_age)
         assert strategy._verify_age_proof(event, age_proof)
 
-        # Invalid proof (use all 0xFF bytes which will never meet difficulty requirement)
+        # Invalid proof - copy the valid proof but set impossibly high difficulty
         invalid_proof = AgeProof(
-            timestamp=timestamp,
-            proof=b"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF",  # All bits set, no leading zeros
-            difficulty=4,
-            key_age=key_age,
+            timestamp=age_proof.timestamp,
+            proof=age_proof.proof,
+            difficulty=256,  # Impossibly high difficulty (more than 256 bits)
+            key_age=age_proof.key_age,
         )
         assert not strategy._verify_age_proof(event, invalid_proof)
 
