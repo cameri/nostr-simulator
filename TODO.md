@@ -134,11 +134,11 @@ This document outlines the development roadmap for the Python-based Nostr simula
 
 ### Burst Spam Attack
 
-- [ ] Implement burst spam agent
-- [ ] Create burst timing strategies
-- [ ] Add volume scaling mechanisms
-- [ ] Implement burst coordination
-- [ ] Create burst pattern variations
+- [x] Implement burst spam agent
+- [x] Create burst timing strategies
+- [x] Add volume scaling mechanisms
+- [x] Implement burst coordination
+- [x] Create burst pattern variations
 
 ### Hash-Link Spam
 
@@ -163,6 +163,46 @@ This document outlines the development roadmap for the Python-based Nostr simula
 - [ ] Add offline state simulation
 - [ ] Implement batch spam release
 - [ ] Create offline coordination
+
+### Link Spam Reply Attacks
+
+- [ ] Implement link spam reply agent
+- [ ] Create popular upload website link generation
+- [ ] Add reply detection and targeting
+- [ ] Implement link variation strategies
+- [ ] Create reply timing mechanisms
+
+### Content Reversal Attacks
+
+- [ ] Implement content reversal reply agent
+- [ ] Create word order reversal algorithms
+- [ ] Add original post detection and targeting
+- [ ] Implement content manipulation strategies
+- [ ] Create reversal pattern variations
+
+### Thread Spam Farming Attacks
+
+- [ ] Implement thread spam farm agent
+- [ ] Create multi-identity thread generation
+- [ ] Add original post detection and targeting
+- [ ] Implement identity rotation per reply
+- [ ] Create thread depth and timing strategies
+
+### Mass Tagging Attacks
+
+- [ ] Implement mass tagging agent
+- [ ] Create pubkey collection and targeting
+- [ ] Add tag spam generation mechanisms
+- [ ] Implement user discovery strategies
+- [ ] Create tag volume scaling patterns
+
+### Content Flooding Attacks
+
+- [ ] Implement content flooding agent
+- [ ] Create extremely long text generation
+- [ ] Add emoji wall generation mechanisms
+- [ ] Implement hard-to-read content patterns
+- [ ] Create content obfuscation strategies
 
 ## Phase 5: Evaluation and Metrics
 
