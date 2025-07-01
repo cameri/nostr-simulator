@@ -44,6 +44,8 @@ This project is a Python-based simulator for decentralized anti-spam and anti-ab
 - Follow the project roadmap outlined in TODO.md
 - Ensure all tasks meet the definition of done criteria in `.github/definition-of-done.md`
 - Mark completed tasks with \[x\] in TODO.md
+- Save your work by committing changes and pushing it to the `main` branch on the remote repository
+- Save your work frequently, specially after completing a task or feature
 
 ### Dependency management
 
