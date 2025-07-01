@@ -229,7 +229,11 @@ jj-squash = "jj squash"
 jj-abandon = "jj abandon"
 
 [tool.poe.tasks.jj-bookmark]
-shell = "jj bookmark set ${bookmark} -r ${revision}"
+shell = "jj bookmark set $bookmark -r $revision"
+args = [
+    { name = "bookmark", help = "Bookmark name", options = ["-b", "--bookmark"], required = true },
+    { name = "revision", help = "Revision ID", options = ["-r", "--revision"], required = true }
+]
 help = "Set a bookmark to a specific revision. Usage: poetry run poe jj-bookmark --bookmark main --revision abc123"
 
 [tool.poe.tasks.jj-bookmark-list]
@@ -237,7 +241,10 @@ shell = "jj bookmark list"
 help = "List all bookmarks"
 
 [tool.poe.tasks.jj-bookmark-delete]
-shell = "jj bookmark delete ${bookmark}"
+shell = "jj bookmark delete $bookmark"
+args = [
+    { name = "bookmark", help = "Bookmark name to delete", options = ["-b", "--bookmark"], required = true }
+]
 help = "Delete a bookmark. Usage: poetry run poe jj-bookmark-delete --bookmark feature-branch"
 
 [tool.poe.tasks.jj-create-commit]
