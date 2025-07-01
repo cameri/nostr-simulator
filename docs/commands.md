@@ -79,7 +79,7 @@ If you have poethepoet installed globally, you can also use: `poe <task_name>`
 **Commit Operations:**
 
 - `poetry run poe jj-commit` - Commit changes interactively
-- `poetry run poe jj-commit-all --message "Your message"` - Commit all changes with a message
+- `poetry run poe jj-create-commit --message "Your message"` - Commit all changes with a message
 - `poetry run poe jj-describe` - Edit commit description
 - `poetry run poe jj-new` - Create new change
 - `poetry run poe jj-branch --message "Branch description"` - Create new branch with description

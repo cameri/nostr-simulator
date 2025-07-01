@@ -220,11 +220,11 @@ security = "bandit -r src/"
 jj-status = "jj status --no-pager"
 jj-log = "jj log --no-pager --limit 10"
 jj-diff = "jj diff --no-pager --git"
-jj-commit = "jj commit"
+jj-describe = "jj describe"
 jj-push = "jj git push"
 jj-pull = "jj git fetch && jj rebase"
 jj-new = "jj new"
-jj-describe = "jj describe"
+jj-commit = "jj commit"
 jj-squash = "jj squash"
 jj-abandon = "jj abandon"
 
@@ -240,12 +240,12 @@ help = "List all bookmarks"
 shell = "jj bookmark delete ${bookmark}"
 help = "Delete a bookmark. Usage: poetry run poe jj-bookmark-delete --bookmark feature-branch"
 
-[tool.poe.tasks.jj-commit-all]
+[tool.poe.tasks.jj-create-commit]
+shell = "jj commit -m \"$message\""
 args = [
     { name = "message", help = "Commit message", options = ["-m", "--message"], required = true }
 ]
-cmd = "jj commit -m '$message'"
-help = "Commit all changes with a message. Usage: poetry run poe jj-commit-all -m 'Your commit message'"
+help = "Commit all changes with a message. Usage: poetry run poe jj-create-commit -m 'Your commit message'"
 
 [tool.poe.tasks.jj-branch]
 shell = "jj new -m '${message}'"
