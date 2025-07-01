@@ -365,16 +365,23 @@ class TestBurstSpammerAgent:
 
     def test_coordinate_with_others_enabled(self) -> None:
         """Test coordination when enabled."""
+        from unittest.mock import patch
+
         pattern = BurstPattern(coordinated=True)
         agent = BurstSpammerAgent("test_agent", burst_pattern=pattern)
         current_time = time.time()
 
-        # Run multiple times to test randomness
-        results = [agent.coordinate_with_others(current_time) for _ in range(10)]
+        # Mock random.random to return predictable values for coordination success
+        # The coordinate_with_others method returns True when random() > 0.1 (90% success rate)
+        with patch('random.random') as mock_random:
+            # Simulate 9 successes (0.2 > 0.1) and 1 failure (0.05 < 0.1)
+            mock_random.side_effect = [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.05]
 
-        # Should have mostly successful coordination (90% rate)
-        success_rate = sum(results) / len(results)
-        assert success_rate >= 0.8  # Allow for some randomness
+            results = [agent.coordinate_with_others(current_time) for _ in range(10)]
+
+            # Should have exactly 90% success rate (9 out of 10)
+            success_rate = sum(results) / len(results)
+            assert success_rate == 0.9
 
     def test_get_attack_metrics(self) -> None:
         """Test attack metrics retrieval."""
