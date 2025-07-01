@@ -373,9 +373,20 @@ class TestBurstSpammerAgent:
 
         # Mock random.random to return predictable values for coordination success
         # The coordinate_with_others method returns True when random() > 0.1 (90% success rate)
-        with patch('random.random') as mock_random:
+        with patch("random.random") as mock_random:
             # Simulate 9 successes (0.2 > 0.1) and 1 failure (0.05 < 0.1)
-            mock_random.side_effect = [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.05]
+            mock_random.side_effect = [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.05,
+            ]
 
             results = [agent.coordinate_with_others(current_time) for _ in range(10)]
 

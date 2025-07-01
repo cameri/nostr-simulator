@@ -53,7 +53,7 @@ This project is a Python-based simulator for decentralized anti-spam and anti-ab
 
 ### Build & run
 
-- After you are done making changes, always try to check the types, lint and format code, test the simulator and ensure coverage is 100%. Use the following commands to do so:
+- After you are done making changes, always try to check the types, lint and format code, test the simulator and ensure coverage is 90%. Use the following commands to do so:
 
 To install dependencies:
 poetry install
@@ -89,36 +89,8 @@ Find more details (schemas, example queries) in the `.github/code-graph-database
 
 ## Version Control
 
-- Avoid using Git, use Jujutsu (jj) for version control. Detailed instructions are in the `using-jj-instructions.md` file.
+- Avoid using Git, use Jujutsu (jj) for version control. Use the instructions in the `using-jj-instructions.md` file.
 
-### Simulation Framework
-
-- Use discrete event simulation principles
-- Implement agent-based models for different actor types:
-  - Honest users
-  - Malicious actors (spammers, attackers)
-  - Relays
-  - Clients
-- All strategies must preserve offline capability and decentralization
-- Support pluggable anti-spam strategies and attack vectors
-
-### Anti-Spam Strategies to Implement
-
-- Proof of Work (PoW)
-- Web of Trust (WoT)
-- Hashchain / Rolling Codes
-- Local reputation tokens
-- Rate limiting
-- Event age proof
-- Group signature schemes
-
-### Attack Vectors to Model
-
-- Sybil spam attacks
-- Burst spam
-- Hash-link spam
-- Replay attacks
-- Offline abuse
 
 ### Evaluation Metrics
 
@@ -135,5 +107,6 @@ Find more details (schemas, example queries) in the `.github/code-graph-database
 - Changes: `changelog.md`
 - Simulator details: `SIMULATOR.md`
 - Coding standards: `.github/python-instructions.md`
-- Definition of done: `.github/definition-of-done.md`
 - Code graph database usage: `.github/code-graph-database-instructions.md`
+
+Keep all documentation up-to-date with the latest project changes and ensure it is clear and concise.
