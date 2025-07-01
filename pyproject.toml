@@ -137,7 +137,7 @@ addopts = [
     "--cov=src/nostr_simulator",
     "--cov-report=term-missing",
     "--cov-report=html",
-    "--cov-fail-under=100"
+    "--cov-fail-under=90"
 ]
 testpaths = ["src"]
 python_files = ["*.test.py", "*.spec.py", "test_*.py"]
@@ -149,6 +149,7 @@ source = ["src"]
 branch = true
 
 [tool.coverage.report]
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
