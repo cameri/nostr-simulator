@@ -26,14 +26,12 @@ jobs:
         virtualenvs-in-project: true
 
     - name: Update dependencies
-      run: |
-        poetry update
-        poetry export -f requirements.txt --output requirements.txt --without-hashes
+      run: poetry run poe update-deps
 
     - name: Run tests to ensure updates don't break anything
       run: |
         poetry install
-        poetry run pytest --cov=src --cov-fail-under=100
+        poetry run poe test-cov
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v5

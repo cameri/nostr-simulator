@@ -1,5 +1,15 @@
 # Nostr Simulator
 
+[![CI](https://github.com/cameri/nostr-simulator/workflows/CI/badge.svg)](https://github.com/cameri/nostr-simulator/actions)
+[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Linting: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Type Checking: mypy](https://img.shields.io/badge/type_checking-mypy-blue.svg)](https://mypy.readthedocs.io/)
+[![Security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+
 A Python-based simulator for decentralized anti-spam and anti-abuse strategies on Nostr using agent-based modeling.
 
 ## Quick Start
@@ -48,40 +58,47 @@ The project uses several tools to maintain code quality:
 
 #### Running Quality Checks
 
-```bash
-# Run all pre-commit hooks
-pre-commit run --all-files
+The project uses [poethepoet](https://github.com/nat-n/poethepoet) for centralized command management. See [`docs/commands.md`](docs/commands.md) for complete command reference.
 
-# Individual tools
-black .
-isort .
-ruff check --fix .
-mypy .
-bandit -r src/
+```bash
+# Run all quality checks (formatting, linting, type checking)
+poetry run poe check-all
+
+# Format code and sort imports
+poetry run poe format-all
+
+# Run individual checks
+poetry run poe format-check    # Check code formatting
+poetry run poe lint           # Check with Ruff linter
+poetry run poe type-check     # Check types with mypy
+poetry run poe security       # Security scan with Bandit
 ```
 
 #### Testing
 
 ```bash
-# Run tests
-pytest
+# Run tests with coverage (recommended)
+poetry run poe test-cov
 
-# Run with coverage
-pytest --cov=src --cov-report=html --cov-report=term
+# Run tests without coverage (faster)
+poetry run poe test
+
+# Run full CI pipeline (quality checks + tests)
+poetry run poe ci
 ```
 
 #### Running the Simulator
 
 ```bash
 # Run the main simulator (basic simulation)
-python -m src.nostr_simulator.main
+poetry run poe simulate
 
 # Run anti-spam strategy scenarios
-python -m src.run_scenarios help          # List available scenarios
-python -m src.run_scenarios pow           # Run Proof of Work scenario
-python -m src.run_scenarios multi         # Run multi-strategy scenario
-python -m src.run_scenarios attack        # Run attack simulation scenario
-python -m src.run_scenarios all           # Run all scenarios
+poetry run poe run-scenarios help          # List available scenarios
+poetry run poe run-scenarios pow           # Run Proof of Work scenario
+poetry run poe run-scenarios multi         # Run multi-strategy scenario
+poetry run poe run-scenarios attack        # Run attack simulation scenario
+poetry run poe run-scenarios all           # Run all scenarios
 ```
 
 #### Available Scenarios
@@ -131,7 +148,7 @@ The project includes dependencies for:
 ### Documentation
 
 - Project roadmap: `TODO.md`
-- Changes: `changelog.md`
+- Changes: `CHANGELOG.md`
 - Simulator details: `SIMULATOR.md`
 - Coding standards: `.github/python-instructions.md`
 - Definition of done: `.github/definition-of-done.md`
