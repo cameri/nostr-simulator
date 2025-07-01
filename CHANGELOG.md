@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## \[Unreleased\]
 
+### Fixed (2025-01-25)
+
+- **Jujutsu Command Naming**: Corrected naming convention for clarity
+  - Renamed `jj-create-commit` to `jj-commit` for interactive commits
+  - Renamed `jj-commit-all` to `jj-create-commit` for commits with messages
+  - Updated documentation to reflect accurate command naming
+
 ### Added (2025-01-25)
 
 - **✅ COMPLETED Centralized Command Management System**
