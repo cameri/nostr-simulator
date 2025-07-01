@@ -188,7 +188,7 @@ type-check = "mypy ."
 # Testing tasks
 test = "pytest"
 test-cov = "pytest --cov=src/nostr_simulator --cov-report=term-missing --cov-report=html --cov-fail-under=90"
-test-cov-parallel = "pytest --cov=src/nostr_simulator --cov-report=term --cov-fail-under=0"
+test-cov-parallel = "coverage run --parallel-mode --source=src -m pytest --no-cov"
 test-cov-xml = "pytest --cov=src/nostr_simulator --cov-report=xml --cov-report=term --cov-fail-under=90"
 test-fast = "pytest -x --ff"  # Stop on first failure, run previously failed tests first
 test-no-cov = "pytest --no-cov"  # Run tests without coverage for faster feedback

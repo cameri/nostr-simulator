@@ -44,15 +44,24 @@ jobs:
       run: poetry install --no-interaction
 
     - name: Run quality checks and tests
-      run: poetry run poe check-all && poetry run poe test-cov-parallel
+      run: |
+        poetry run poe check-all
+        poetry run poe test-cov-parallel
+
+    - name: List coverage files (debug)
+      run: |
+        echo "Listing coverage files:"
+        ls -la .coverage* || echo "No coverage files found"
 
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
         name: coverage-data-${{ matrix.python-version }}
-        path: .coverage.*
+        path: |
+          .coverage
+          .coverage.*
         include-hidden-files: true
-        if-no-files-found: ignore
+        if-no-files-found: error
 
   coverage:
     name: Combine & check coverage
@@ -77,14 +86,31 @@ jobs:
         run: |
           python -Im pip install --upgrade coverage[toml]
 
-          python -Im coverage combine
-          python -Im coverage html --skip-covered --skip-empty
+          # List downloaded files (debug)
+          echo "Files in current directory:"
+          ls -la
+          echo "Looking for coverage files:"
+          ls -la .coverage* || echo "No coverage files found"
 
-          # Report and write to summary.
-          python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+          # Combine coverage data (will succeed even if only one file exists)
+          python -Im coverage combine || echo "No data to combine (continuing anyway)"
 
-          # Report again and fail if under 90%.
-          python -Im coverage report --fail-under=90
+          # Check if we have combined data
+          if [ -f ".coverage" ]; then
+            echo "Coverage data found, generating reports..."
+
+            # Create HTML report
+            python -Im coverage html --skip-covered --skip-empty
+
+            # Report and write to summary.
+            python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+
+            # Report again and fail if under 90%.
+            python -Im coverage report --fail-under=90
+          else
+            echo "No coverage data available after combine step"
+            exit 1
+          fi
 
       - name: Upload HTML report if check failed
         uses: actions/upload-artifact@v4
