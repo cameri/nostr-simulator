@@ -38,7 +38,7 @@ This project is a Python-based simulator for decentralized anti-spam and anti-ab
 
 ## General
 
-- Summarize changes in the changelog.md file
+- Summarize changes in the CHANGELOG.md file
 - Use docstrings for all classes and functions following Google style
 - Implement proper error handling and logging
 - Follow the project roadmap outlined in TODO.md
@@ -58,24 +58,26 @@ This project is a Python-based simulator for decentralized anti-spam and anti-ab
 To install dependencies:
 poetry install
 
-To run type checks:
-poetry run mypy .
+To run all quality checks (type check, lint, format check):
+poetry run poe check-all
 
-To lint:
-poetry run ruff check --fix .
+To run type checks only:
+poetry run poe type-check
 
-To format:
-poetry run black .
-poetry run isort .
+To lint and auto-fix issues:
+poetry run poe lint-fix
+
+To format code:
+poetry run poe format-all
 
 To run tests:
-poetry run pytest
+poetry run poe test
 
 To run tests with coverage:
-poetry run pytest --cov=src --cov-report=html --cov-report=term
+poetry run poe test-cov
 
 To run the simulator:
-poetry run python -m src.main
+poetry run poe simulate
 
 ## Code Graph Database Workflow
 
@@ -104,7 +106,7 @@ Find more details (schemas, example queries) in the `.github/code-graph-database
 ## Documentation
 
 - Project roadmap: `TODO.md`
-- Changes: `changelog.md`
+- Changes: `CHANGELOG.md`
 - Simulator details: `SIMULATOR.md`
 - Coding standards: `.github/python-instructions.md`
 - Code graph database usage: `.github/code-graph-database-instructions.md`

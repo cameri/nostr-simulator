@@ -43,20 +43,8 @@ jobs:
     - name: Install project
       run: poetry install --no-interaction
 
-    - name: Run type checks
-      run: poetry run mypy .
-
-    - name: Run linting
-      run: poetry run ruff check .
-
-    - name: Check code formatting
-      run: |
-        poetry run black --check .
-        poetry run isort --check-only .
-
-    - name: Run tests with coverage
-      run: |
-        poetry run pytest --cov=src --cov-report=xml --cov-report=term --cov-fail-under=100
+    - name: Run quality checks and tests
+      run: poetry run poe ci
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

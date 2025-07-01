@@ -63,6 +63,7 @@ types-pyyaml = "^6.0.0"
 # Documentation
 mkdocs = "^1.5.0"
 mkdocs-material = "^9.0.0"
+poethepoet = "^0.36.0"
 
 [tool.poetry.scripts]
 nostr-simulator = "nostr_simulator.main:main"
@@ -162,3 +163,136 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+# ============================================================================
+# Task Runner Configuration (poethepoet)
+# ============================================================================
+# Single source of truth for all project commands and scripts
+# Usage: poetry run poe <task_name>
+#        or: poe <task_name> (if poethepoet is installed globally)
+
+[tool.poe.tasks]
+# Code formatting and import sorting
+format = "black ."
+format-check = "black --check ."
+sort-imports = "isort ."
+sort-imports-check = "isort --check-only ."
+
+# Linting and type checking
+lint = "ruff check ."
+lint-fix = "ruff check --fix ."
+type-check = "mypy ."
+
+# Testing tasks
+test = "pytest"
+test-cov = "pytest --cov=src/nostr_simulator --cov-report=term-missing --cov-report=html --cov-fail-under=90"
+test-cov-xml = "pytest --cov=src/nostr_simulator --cov-report=xml --cov-report=term --cov-fail-under=90"
+test-fast = "pytest -x --ff"  # Stop on first failure, run previously failed tests first
+test-no-cov = "pytest --no-cov"  # Run tests without coverage for faster feedback
+
+# Combined quality tasks
+format-all = ["format", "sort-imports"]  # Format code and sort imports
+check-all = ["format-check", "sort-imports-check", "lint", "type-check"]  # All quality checks
+quality = ["check-all"]  # Alias for check-all
+ci = ["check-all", "test-cov-xml"]  # What CI runs
+
+# Simulation and main application
+simulate = "python -m nostr_simulator.main"
+run-scenarios = "python src/run_scenarios.py"
+
+# Documentation tasks
+docs-serve = "mkdocs serve"
+docs-build = "mkdocs build"
+docs-clean = { "shell" = "rm -rf site/" }
+
+# Maintenance tasks
+clean = { "shell" = "find . -type d -name __pycache__ -exec rm -rf {} + && find . -name '*.pyc' -delete && rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/ .ruff_cache/" }
+clean-all = ["clean", "docs-clean"]
+
+# Dependency management
+update-deps = "poetry update"
+show-outdated = "poetry show --outdated"
+
+# Security
+security = "bandit -r src/"
+
+# Version control (Jujutsu)
+jj-status = "jj status --no-pager"
+jj-log = "jj log --no-pager --limit 10"
+jj-diff = "jj diff --no-pager --git"
+jj-commit = "jj commit"
+jj-push = "jj git push"
+jj-pull = "jj git fetch && jj rebase"
+jj-new = "jj new"
+jj-describe = "jj describe"
+jj-squash = "jj squash"
+jj-abandon = "jj abandon"
+
+[tool.poe.tasks.jj-bookmark]
+shell = "jj bookmark set ${bookmark} -r ${revision}"
+help = "Set a bookmark to a specific revision. Usage: poetry run poe jj-bookmark --bookmark main --revision abc123"
+
+[tool.poe.tasks.jj-bookmark-list]
+shell = "jj bookmark list"
+help = "List all bookmarks"
+
+[tool.poe.tasks.jj-bookmark-delete]
+shell = "jj bookmark delete ${bookmark}"
+help = "Delete a bookmark. Usage: poetry run poe jj-bookmark-delete --bookmark feature-branch"
+
+[tool.poe.tasks.jj-commit-all]
+args = [
+    { name = "message", help = "Commit message", options = ["-m", "--message"], required = true }
+]
+cmd = "jj commit -m '$message'"
+help = "Commit all changes with a message. Usage: poetry run poe jj-commit-all -m 'Your commit message'"
+
+[tool.poe.tasks.jj-branch]
+shell = "jj new -m '${message}'"
+help = "Create a new branch with a message. Usage: poetry run poe jj-branch --message 'Branch description'"
+
+[tool.poe.tasks.jj-sync]
+shell = "jj git fetch && jj rebase -d main"
+help = "Sync with remote main branch"
+
+[tool.poe.tasks.jj-clean-abandoned]
+shell = "jj log --no-graph -r 'mine() & empty() & abandoned()' --template 'change_id.short()' | xargs -r jj abandon"
+help = "Clean up abandoned empty commits"
+
+# Development setup and workflow tasks
+[tool.poe.tasks.setup]
+sequence = ["clean", "update-deps", "check-all", "test-cov"]
+help = "Full development setup"
+
+[tool.poe.tasks.pre-commit]
+sequence = ["format", "sort-imports", "lint-fix", "type-check", "test-fast"]
+help = "Pre-commit checks"
+
+[tool.poe.tasks.prepare-commit]
+sequence = ["format-all", "lint-fix", "test-fast", "jj-status"]
+help = "Prepare for commit with quality checks and status"
+
+[tool.poe.tasks.commit-ready]
+sequence = ["check-all", "test-cov", "jj-diff"]
+help = "Check if ready to commit"
+
+[tool.poe.tasks.safe-commit]
+sequence = ["format-all", "lint-fix", "check-all", "test-fast"]
+help = "Run all quality checks before committing (does not actually commit)"
+
+[tool.poe.tasks.quick-save]
+shell = "poetry run poe format-all && jj commit -m 'WIP: quick save'"
+help = "Quick save work in progress with formatting"
+
+[tool.poe.tasks.test-watch]
+shell = "find src tests -name '*.py' | entr -r poetry run pytest"
+help = "Run tests automatically when files change (requires entr)"
+
+[tool.poe.tasks.cov-report]
+shell = "poetry run pytest --cov=src/nostr_simulator --cov-report=html && open htmlcov/index.html"
+help = "Generate coverage report and open in browser"
+
+# Environment variables for all tasks
+[tool.poe.env]
+COVERAGE_THRESHOLD = "90"
+PYTHONPATH = "src"
