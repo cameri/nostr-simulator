@@ -4,6 +4,7 @@ import random
 import time
 from typing import Any
 
+from ..agents.adversarial.burst_spammer import BurstPattern, BurstSpammerAgent, BurstTiming
 from ..anti_spam.pow import ProofOfWorkStrategy
 from ..protocol.events import NostrEvent, NostrEventKind, NostrTag
 from ..protocol.keys import NostrKeyPair
@@ -46,6 +47,66 @@ def simulate_burst_spam(
         events.append(event)
 
     return events
+
+
+def simulate_advanced_burst_spam() -> tuple[BurstSpammerAgent, list[NostrEvent]]:
+    """Simulate advanced burst spam using BurstSpammerAgent."""
+    print("💥 Creating advanced burst spam agent")
+
+    # Configure burst attack pattern
+    timing = BurstTiming(
+        burst_duration=15.0,  # 15 second bursts
+        burst_interval=30.0,  # 30 seconds between bursts
+        messages_per_second=8.0,  # High intensity
+        burst_count=3,  # 3 total bursts
+        randomization=0.3,  # 30% timing variation
+    )
+
+    pattern = BurstPattern(
+        timing=timing,
+        initial_volume=20,  # Start with 20 messages per burst
+        volume_scaling=1.8,  # Escalate by 80% each burst
+        max_volume=60,  # Cap at 60 messages
+        coordinated=True,  # Coordinate with other agents
+        content_variation=True,  # Vary spam content
+        timing_jitter=True,  # Add timing randomness
+        escalation_mode=True,  # Increase intensity over time
+    )
+
+    # Create burst spammer agent
+    agent = BurstSpammerAgent("burst_attacker_001", burst_pattern=pattern)
+
+    # Simulate the attack by generating events the agent would create
+    events = []
+    current_time = time.time()
+
+    # Start the attack
+    agent.start_attack(current_time)
+
+    # Simulate multiple burst cycles
+    simulation_time = current_time
+    while agent.attack_active and simulation_time < current_time + 300:  # 5 minute simulation
+        # Check if should start a burst
+        if agent.should_start_burst(simulation_time):
+            agent.start_burst(simulation_time)
+            print(f"   🚀 Starting burst {agent.current_burst} at {simulation_time:.1f}")
+
+        # Check if should send message during burst
+        if agent.should_send_message_in_burst(simulation_time):
+            event = agent.create_spam_event(simulation_time)
+            if event:
+                events.append(event)
+
+        # Update agent state
+        agent.update_state(simulation_time)
+
+        # Advance simulation time
+        simulation_time += 0.5  # Advance by 0.5 seconds
+
+    metrics = agent.get_attack_metrics()
+    print(f"   📊 Attack completed: {metrics['total_bursts']} bursts, {metrics['total_messages']} messages")
+
+    return agent, events
 
 
 def simulate_hash_link_spam(keypair: NostrKeyPair) -> list[NostrEvent]:
@@ -238,8 +299,8 @@ def run_attack_simulation_scenario() -> None:
     print(f"   ✅ {sybil_stats['allowed']}/{sybil_stats['total']} messages allowed")
     print()
 
-    # Test 2: Burst Spam Attack
-    print("2️⃣  Burst Spam Attack:")
+    # Test 2: Burst Spam Attack (Simple)
+    print("2️⃣  Simple Burst Spam Attack:")
     spammer = NostrKeyPair.generate()
     burst_events = simulate_burst_spam(spammer, 15)
 
@@ -253,6 +314,22 @@ def run_attack_simulation_scenario() -> None:
         f"   ⏱️  {burst_stats['blocked_by_rate']}/{burst_stats['total']} blocked by rate limit"
     )
     print(f"   ✅ {burst_stats['allowed']}/{burst_stats['total']} messages allowed")
+    print()
+
+    # Test 2b: Advanced Burst Spam Attack
+    print("2️⃣b Advanced Burst Spam Attack:")
+    burst_agent, advanced_burst_events = simulate_advanced_burst_spam()
+
+    advanced_burst_stats = test_events_against_strategies(
+        advanced_burst_events, strategies, current_time + 200, "Advanced Burst"
+    )
+    print(
+        f"   📈 {advanced_burst_stats['blocked_by_pow']}/{advanced_burst_stats['total']} blocked by PoW"
+    )
+    print(
+        f"   ⏱️  {advanced_burst_stats['blocked_by_rate']}/{advanced_burst_stats['total']} blocked by rate limit"
+    )
+    print(f"   ✅ {advanced_burst_stats['allowed']}/{advanced_burst_stats['total']} messages allowed")
     print()
 
     # Test 3: Hash-Link Spam
