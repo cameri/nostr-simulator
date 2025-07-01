@@ -403,7 +403,10 @@ class TestBurstSpammerAgent:
 
     def test_process_event_starts_burst(self) -> None:
         """Test event processing that starts a burst."""
-        agent = BurstSpammerAgent("test_agent")
+        # Use a pattern without coordination for deterministic testing
+        pattern = BurstPattern()
+        pattern.coordinated = False
+        agent = BurstSpammerAgent("test_agent", burst_pattern=pattern)
         agent.simulation_engine = Mock()
         current_time = time.time()
 
