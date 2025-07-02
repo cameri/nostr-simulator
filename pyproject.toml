@@ -234,6 +234,13 @@ jj-commit = "jj commit"
 jj-squash = "jj squash"
 jj-abandon = "jj abandon"
 
+[tool.poe.tasks.jj-sign]
+shell = "jj sign --ignore-immutable -r $revision"
+args = [
+    { name = "revision", help = "Revision ID to sign", options = ["-r", "--revision"], required = true }
+]
+help = "Sign a specific revision (including immutable ones). Usage: poetry run poe jj-sign --revision abc123"
+
 [tool.poe.tasks.jj-bookmark]
 shell = "jj bookmark set $bookmark -r $revision"
 args = [

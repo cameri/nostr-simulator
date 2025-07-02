@@ -89,6 +89,7 @@ If you have poethepoet installed globally, you can also use: `poe <task_name>`
 
 - `poetry run poe jj-squash` - Squash changes
 - `poetry run poe jj-abandon` - Abandon current change
+- `poetry run poe jj-sign --revision abc123` - Sign a specific revision (including immutable ones)
 - `poetry run poe jj-clean-abandoned` - Clean up abandoned empty commits
 
 **Remote Operations:**
